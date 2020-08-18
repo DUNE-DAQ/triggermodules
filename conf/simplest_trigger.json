@@ -1,0 +1,43 @@
+{
+    "queues": {
+        "TPsQueue": {
+            "capacity": 1000,
+            "kind": "FollyMPMCQueue"
+        },
+        "TCsQueue": {
+            "capacity": 100,
+            "kind": "FollyMPMCQueue"
+        },
+        "TDsQueue": {
+            "capacity": 10,
+            "kind": "FollyMPMCQueue"
+        }
+    },
+    
+    "modules": {
+        "TPsGenerator": {
+            "user_module_type": "TriggerPrimitiveRadiological",
+            "output": "TPsQueue"
+        },
+        "TPsGenerator2": {
+            "user_module_type": "TriggerPrimitiveSupernova",
+            "output": "TPsQueue"
+        },
+        "TCsGenerator": {
+            "user_module_type": "DAQTriggerCandidateMaker",
+            "input": "TPsQueue",
+            "output": "TCsQueue"
+        },
+        "TDsGenerator": {
+            "user_module_type": "DAQTriggerDecisionMaker",
+            "input": "TCsQueue",
+            "output": "TDsQueue"
+        }
+    },
+    
+    "commands": {
+        "start": [ "TDsGenerator", "TCsGenerator", "TPsGenerator", "TPsGenerator2"],
+        "stop":  [ "TPsGenerator", "TPsGenerator2", "TCsGenerator", "TDsGenerator"],
+        "configure_threshold": [ "TDsGenerator" ]
+    }
+}
