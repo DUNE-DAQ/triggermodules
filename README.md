@@ -4,7 +4,7 @@
 
 This package is the prototype interface between DuneTriggerAlgs (https://github.com/plasorak/DuneTriggerAlgs) and appfwk (https://github.com/DUNE-DAQ/appfwk). This is where the queues, DAQModule and their are implemented.
 
-This package also is the interface in the case you want to simulate the trigger decision process and feed in simulated TPs. The implementation of that happens in DuneTriggerGenerators (https://github.com/plasorak/DuneTriggerGenerators, I know, it doesn't exist yet).
+This package also is the interface in the case you want to simulate the trigger decision process and feed in simulated TPs. The implementation of that happens in DuneTriggerMCGenerators (https://github.com/plasorak/DuneTriggerMCGenerators, I know, it doesn't exist yet).
 
 ## Installation
 To install you need to first have the application framework, you can find instructions here: https://github.com/DUNE-DAQ/appfwk/wiki/Compiling-and-running
@@ -17,7 +17,7 @@ git clone https://github.com/DUNE-DAQ/listrev.git
 
 Then, you need to build DuneTriggerAlgs, which is a dependency of this package, the way to do that is here (well, not really, but soon): https://github.com/plasorak/DuneTriggerAlgs
 
-Optionally, you can install DuneTriggerGenerators: https://github.com/plasorak/DuneTriggerGenerators.
+Optionally, you can install DuneTriggerMCGenerators: https://github.com/plasorak/DuneTriggerMCGenerators, you should get a warning if you don't, but you can ignore it unless you really want the MC generators.
 
 Finally, you should go back to the place called "MyTopDir" in the first link from the appfwk instruction, and do
 
