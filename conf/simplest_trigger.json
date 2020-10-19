@@ -24,12 +24,12 @@
             "output": "TPsQueue"
         },
         "TCsGenerator": {
-            "user_module_type": "DAQTriggerCandidateMaker",
+            "user_module_type": "DAQTriggerActivityMaker",
             "input": "TPsQueue",
             "output": "TCsQueue"
         },
         "TDsGenerator": {
-            "user_module_type": "DAQTriggerDecisionMaker",
+            "user_module_type": "DAQTriggerCandidateMaker",
             "input": "TCsQueue",
             "output": "TDsQueue"
         }

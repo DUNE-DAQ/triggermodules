@@ -3,7 +3,9 @@ project(DAQDuneTriggers VERSION 1.1.0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../daq-buildtools/cmake ${CMAKE_MODULE_PATH})
 
-set(DuneTriggerAlgs_DIR /dune/app/users/plasorak/framework/dt/)
+#set(DuneTriggerAlgs_DIR ${DUNETRIGGERALGS_DIR})
+#set(DuneTriggerAlgs_DIR /dune/app/users/plasorak/framework/dt/)
+set(DuneTriggerAlgs_DIR /dune/app/users/tbezerra/dunetpc/DuneTriggerAlgs_thiago/DuneTriggerAlgs/install/)
 include(DAQ)
 
 daq_setup_environment()
@@ -22,15 +24,15 @@ add_library(DAQDuneTriggers_TriggerPrimitiveSupernova_duneDAQModule src/TriggerP
 target_link_libraries(DAQDuneTriggers_TriggerPrimitiveSupernova_duneDAQModule appfwk::appfwk)
 target_include_directories(DAQDuneTriggers_TriggerPrimitiveSupernova_duneDAQModule PUBLIC ${DUNETRIGGERALGS_INCLUDES})
 
+add_library(DAQDuneTriggers_DAQTriggerActivityMaker_duneDAQModule src/DAQTriggerActivityMaker.cpp)
+target_link_libraries(DAQDuneTriggers_DAQTriggerActivityMaker_duneDAQModule appfwk::appfwk)
+target_link_libraries(DAQDuneTriggers_DAQTriggerActivityMaker_duneDAQModule ${DUNETRIGGERALGS_LIBRARIES}/libSupernovaTrigger.so)
+target_include_directories(DAQDuneTriggers_DAQTriggerActivityMaker_duneDAQModule PUBLIC ${DUNETRIGGERALGS_INCLUDES})
+
 add_library(DAQDuneTriggers_DAQTriggerCandidateMaker_duneDAQModule src/DAQTriggerCandidateMaker.cpp)
 target_link_libraries(DAQDuneTriggers_DAQTriggerCandidateMaker_duneDAQModule appfwk::appfwk)
 target_link_libraries(DAQDuneTriggers_DAQTriggerCandidateMaker_duneDAQModule ${DUNETRIGGERALGS_LIBRARIES}/libSupernovaTrigger.so)
 target_include_directories(DAQDuneTriggers_DAQTriggerCandidateMaker_duneDAQModule PUBLIC ${DUNETRIGGERALGS_INCLUDES})
-
-add_library(DAQDuneTriggers_DAQTriggerDecisionMaker_duneDAQModule src/DAQTriggerDecisionMaker.cpp)
-target_link_libraries(DAQDuneTriggers_DAQTriggerDecisionMaker_duneDAQModule appfwk::appfwk)
-target_link_libraries(DAQDuneTriggers_DAQTriggerDecisionMaker_duneDAQModule ${DUNETRIGGERALGS_LIBRARIES}/libSupernovaTrigger.so)
-target_include_directories(DAQDuneTriggers_DAQTriggerDecisionMaker_duneDAQModule PUBLIC ${DUNETRIGGERALGS_INCLUDES})
 
 ##############################################################################
 daq_point_build_to( conf )
@@ -40,7 +42,7 @@ file(COPY conf/simplest_trigger.json DESTINATION conf)
 daq_install(TARGETS
   DAQDuneTriggers_TriggerPrimitiveSupernova_duneDAQModule
   DAQDuneTriggers_TriggerPrimitiveRadiological_duneDAQModule
+  DAQDuneTriggers_DAQTriggerActivityMaker_duneDAQModule
   DAQDuneTriggers_DAQTriggerCandidateMaker_duneDAQModule
-  DAQDuneTriggers_DAQTriggerDecisionMaker_duneDAQModule
   )
 

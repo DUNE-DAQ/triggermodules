@@ -31,7 +31,7 @@ Hopefully, you didn't get any errors and you now have everything compiled.
 ## Running
 Logging from fresh shell, execute `. ./setup_runtime_environment` from MyTopDir, and then:
 ```
-daq_application -c QueryResponseCommandFacility -j DAQDuneTriggers/conf/sim_trigger_sn.json
+daq_application -c QueryResponseCommandFacility -j DAQDuneTriggers/conf/simplest_trigger.json
 ```
 
 Or any other json file in `DAQDuneTriggers/conf`
