@@ -4,11 +4,11 @@
             "capacity": 1000,
             "kind": "FollyMPMCQueue"
         },
-        "TCsQueue": {
+        "TAsQueue": {
             "capacity": 100,
             "kind": "FollyMPMCQueue"
         },
-        "TDsQueue": {
+        "TCsQueue": {
             "capacity": 10,
             "kind": "FollyMPMCQueue"
         }
@@ -23,21 +23,21 @@
             "user_module_type": "TriggerPrimitiveSupernova",
             "output": "TPsQueue"
         },
-        "TCsGenerator": {
+        "TAsGenerator": {
             "user_module_type": "DAQTriggerActivityMaker",
             "input": "TPsQueue",
-            "output": "TCsQueue"
+            "output": "TAsQueue"
         },
-        "TDsGenerator": {
+        "TCsGenerator": {
             "user_module_type": "DAQTriggerCandidateMaker",
-            "input": "TCsQueue",
-            "output": "TDsQueue"
+            "input": "TAsQueue",
+            "output": "TCsQueue"
         }
     },
     
     "commands": {
-        "start": [ "TDsGenerator", "TCsGenerator", "TPsGenerator", "TPsGenerator2"],
-        "stop":  [ "TPsGenerator", "TPsGenerator2", "TCsGenerator", "TDsGenerator"],
-        "configure_threshold": [ "TDsGenerator" ]
+        "start": [ "TCsGenerator", "TAsGenerator", "TPsGenerator", "TPsGenerator2"],
+        "stop":  [ "TPsGenerator", "TPsGenerator2", "TAsGenerator", "TCsGenerator"],
+        "configure_threshold": [ "TCsGenerator" ]
     }
 }
