@@ -14,6 +14,8 @@
 #include "appfwk/DAQModule.hpp"
 #include <ers/Issue.h>
 
+#include <string>
+
 #define TRACE_NAME "CandidateMaker" // NOLINT
 #define TLVL_ENTER_EXIT_METHODS 10
 #define TLVL_GENERATION 11
