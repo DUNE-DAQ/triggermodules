@@ -25,7 +25,6 @@ TPsGenerator = cmd.ModSpec(
 		inst = "TPsQueue",
 		name = "output",
 		dir = "output"))
-
 TPsGenerator2 = cmd.ModSpec(
 	inst = "TPsGenerator",
 	plugin = "TriggerPrimitiveSupernova",
@@ -33,7 +32,6 @@ TPsGenerator2 = cmd.ModSpec(
 		inst = "TPsQueue",
 		name = "output",
 		dir = "output"))
-
 TAsGenerator = cmd.ModSpec(
 	inst = "TAsGenerator",
 	plugin = "DAQTriggerActivityMaker",
@@ -46,7 +44,6 @@ TAsGenerator = cmd.ModSpec(
 			inst = "TAsQueue",
 			name = "output",
 			dir = "output")))
-
 TCsGenerator = cmd.ModSpec(
 	inst = "TCsGenerator",
 	plugin = "DAQTriggerCandidateMaker",
@@ -59,7 +56,6 @@ TCsGenerator = cmd.ModSpec(
 			inst = "TCsQueue",
 			name = "output",
 			dir = "output")))
-
 modules = cmd.ModSpecs([TPsGenerator,TPsGenerator2,TAsGenerator,TCsGenerator])
 
 #########	Conf	
