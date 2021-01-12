@@ -15,7 +15,7 @@ TCsQueue = cmd.QueueSpec(
 	kind = cmd.QueueKind("FollyMPMCQueue"),
 	inst = "TPsQueue",
 	capacity = 10))
-queues = cmd.QueueSpecs([TPsQueue,TAsQueue,TCsQueue)
+queues = cmd.QueueSpecs([TPsQueue,TAsQueue,TCsQueue])
 
 #########	Modules	
 TPsGenerator = cmd.ModSpec(
