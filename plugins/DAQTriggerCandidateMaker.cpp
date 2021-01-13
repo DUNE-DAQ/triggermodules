@@ -37,7 +37,7 @@ namespace dunedaq {
     private:
       void do_start(const nlohmann::json& obj);
       void do_stop(const nlohmann::json& obj);
-      void do_configure_threshold(const nlohmann::json& obj);
+      void do_configure(const nlohmann::json& obj);
 
       dunedaq::appfwk::ThreadHelper thread_;
       void do_work(std::atomic<bool>&);
@@ -63,7 +63,7 @@ namespace dunedaq {
       
       register_command("start"    , &DAQTriggerCandidateMaker::do_start    );
       register_command("stop"     , &DAQTriggerCandidateMaker::do_stop     );
-      register_command("configure_threshold", &DAQTriggerCandidateMaker::do_configure_threshold);
+      register_command("configure", &DAQTriggerCandidateMaker::do_configure);
     }
 
     void DAQTriggerCandidateMaker::init(const nlohmann::json& iniobj) {
@@ -97,7 +97,7 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_stop() method";
     }
 
-    void DAQTriggerCandidateMaker::do_configure_threshold(const nlohmann::json& /*args*/) {
+    void DAQTriggerCandidateMaker::do_configure(const nlohmann::json& /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
       
       int thresh = m_threshold;
