@@ -1,5 +1,5 @@
 local moo = import "moo.jsonnet";
-local cmd = import "appfwk-cmd-make.jsonnet";
+local cmd = import "appfwk/schema/appfwk-cmd-make.jsonnet";
 
 ///////////	Queues
 local queues = {
@@ -55,5 +55,8 @@ local modules = {
 	cmd.init(queues,modules),
 //	cmd.start(	["TCsGenerator", "TAsGenerator", "TPsGenerator", "TPsGenerator2"]),
 //	cmd.stop(	["TPsGenerator", "TPsGenerator2", "TAsGenerator", "TCsGenerator"]),
+	cmd.conf(	cmd.mcmd("DAQTriggerCandidateMake")),//,"TAsGenerator", "TPsGenerator", "TPsGenerator2"]),
+	cmd.start(40),
+	cmd.stop(),
 //	cmd.conf(	["TCsGenerator"]),
 ]
