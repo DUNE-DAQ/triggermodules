@@ -15,6 +15,9 @@ local queues = {
 	       [cmd.mspec("TPsGenerator","TriggerPrimitiveRadiological", [
                    cmd.qinfo("output", "TPsQueue", cmd.qdir.output)]),
 
+	        cmd.mspec("TPsGenerator2","TriggerPrimitiveSupernova", [
+                   cmd.qinfo("output", "TPsQueue", cmd.qdir.output)]),
+
                 cmd.mspec("TAsGenerator","DAQTriggerActivityMaker", [
                    cmd.qinfo("input", "TPsQueue", cmd.qdir.input), cmd.qinfo("output","TAsQueue",cmd.qdir.output)]),
 
