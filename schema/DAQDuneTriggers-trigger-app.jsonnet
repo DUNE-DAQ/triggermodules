@@ -1,4 +1,7 @@
-// Testing if it works only with TP generator
+// Example commands for a DAQDuneTriggers job.
+//
+// It is TP-TA-TC sequence.
+//       TP_generator -> (TP) -> TA_maker -> (TA) -> TC_maker -> (TC)
 //
 
 local moo = import "moo.jsonnet";
