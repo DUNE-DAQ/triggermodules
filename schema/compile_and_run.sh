@@ -1,4 +1,6 @@
+APPNAME=simplest_trigger_app
+APPNAME=1toNTP_trigger_app
 cd ../../..
-moo compile sourcecode/DAQDuneTriggers/schema/simplest_trigger_app.jsonnet > sourcecode/DAQDuneTriggers/schema/simplest_trigger_app_compiled.json
+moo compile sourcecode/DAQDuneTriggers/schema/"$APPNAME".jsonnet > sourcecode/DAQDuneTriggers/schema/"$APPNAME"_compiled.json
 cd sourcecode/DAQDuneTriggers/schema/
-daq_application -c simplest_trigger_app_compiled.json 
+daq_application -c "$APPNAME"_compiled.json 
