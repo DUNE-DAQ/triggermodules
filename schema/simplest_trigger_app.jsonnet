@@ -1,18 +1,18 @@
 local moo = import "moo.jsonnet";
-local cmd = import "appfwk/schema/appfwk-cmd-make.jsonnet";
+local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
 
 ///////////	Queues
 local queues = {
 	TPsQueue: cmd.qspec("TPsQueue",
-		"FollyMPMQueue",
+		"FollyMPMCQueue",
 		1000),
 			
 	TAsQueue: cmd.qspec("TAsQueue",
-		"FollyMPMQueue",
+		"FollyMPMCQueue",
 		100),
 		
 	TCsQueue: cmd.qspec("TCsQueue",
-		"FollyMPMQueue",
+		"FollyMPMCQueue",
 		10),
 };
 
@@ -20,15 +20,15 @@ local queues = {
 local modules = {
 	TPsGenerator: cmd.mspec("TPsGenerator",
 		"TriggerPrimitiveRadiological",
-		cmd.qinfo("output",
+		[cmd.qinfo("output",
 			"TPsQueue",
-			cmd.qdir.output)),
+			cmd.qdir.output)]),
 
-	TPsGenerator2: cmd.mspec("TPsGenerator",
+	TPsGenerator2: cmd.mspec("TPsGenerator2",
 		"TriggerPrimitiveSupernova",
-		cmd.qinfo("output",
+		[cmd.qinfo("output",
 			"TPsQueue",
-			cmd.qdir.output)),
+			cmd.qdir.output)]),
 
 	TAsGenerator: cmd.mspec("TAsGenerator",
 		"DAQTriggerActivityMaker",
@@ -40,7 +40,7 @@ local modules = {
 			cmd.qdir.output)]),
 	
 	TCsGenerator: cmd.mspec("TCsGenerator",
-		"DAQTriggerCandidateMake",
+		"DAQTriggerCandidateMaker",
 		[cmd.qinfo("input",
 			"TAsQueue",
 			cmd.qdir.input),
@@ -52,11 +52,14 @@ local modules = {
 
 ///////////	Conf
 [
-	cmd.init(queues,modules),
+	cmd.init([queues.TPsQueue,queues.TAsQueue,queues.TCsQueue],
+		[modules.TPsGenerator, modules.TPsGenerator2, modules.TAsGenerator, modules.TCsGenerator])
+		{ waitms: 1000},
 //	cmd.start(	["TCsGenerator", "TAsGenerator", "TPsGenerator", "TPsGenerator2"]),
 //	cmd.stop(	["TPsGenerator", "TPsGenerator2", "TAsGenerator", "TCsGenerator"]),
-	cmd.conf(	cmd.mcmd("DAQTriggerCandidateMake")),//,"TAsGenerator", "TPsGenerator", "TPsGenerator2"]),
-	cmd.start(40),
-	cmd.stop(),
+	cmd.conf(	[cmd.mcmd("TriggerPrimitiveRadiological"),cmd.mcmd("DAQTriggerActivityMaker"),cmd.mcmd("DAQTriggerCandidateMaker")])
+		{ waitms: 1000},//,"TAsGenerator", "TPsGenerator", "TPsGenerator2"]),
+	cmd.start(40){ waitms: 1000},
+	cmd.stop(){ waitms: 1000},
 //	cmd.conf(	["TCsGenerator"]),
 ]
