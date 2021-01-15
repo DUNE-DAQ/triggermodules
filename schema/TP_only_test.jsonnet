@@ -16,7 +16,10 @@ local queues = {
                    cmd.qinfo("output", "TPsQueue", cmd.qdir.output)]),
 
                 cmd.mspec("TAsGenerator","DAQTriggerActivityMaker", [
-                   cmd.qinfo("input", "TPsQueue", cmd.qdir.input), cmd.qinfo("output","TAsQueue",cmd.qdir.output)])]) { waitms: 1000},
+                   cmd.qinfo("input", "TPsQueue", cmd.qdir.input), cmd.qinfo("output","TAsQueue",cmd.qdir.output)]),
+
+                cmd.mspec("TCsGenerator","DAQTriggerCandidateMaker", [
+                   cmd.qinfo("input", "TAsQueue", cmd.qdir.input), cmd.qinfo("output","TCsQueue",cmd.qdir.output)])]) { waitms: 1000},
 
       cmd.conf([cmd.mcmd("TriggerPrimitiveRadiological")]) { waitms: 1000 },
       cmd.start(42) { waitms: 1000 },
