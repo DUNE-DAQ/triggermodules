@@ -6,18 +6,19 @@
 
 local moo = import "moo.jsonnet";
 local cmd = import "appfwk-cmd-make.jsonnet";
+//local test = import "TCs_gen_conf.jsonnet"
 
 local queues = {
       TPsQueue: cmd.qspec("TPsQueue",
-      		"FollyMPMQueue",
+      		"FollyMPMCQueue",
 		1000),
 					
       TAsQueue: cmd.qspec("TAsQueue",
-	        "FollyMPMQueue",
+	        "FollyMPMCQueue",
 		100),
 								
       TCsQueue: cmd.qspec("TCsQueue",
-		 "FollyMPMQueue",
+		 "FollyMPMCQueue",
 		10),
 };
 
@@ -27,7 +28,7 @@ local modules = {
       		    "TriggerPrimitiveRadiological",
 		     cmd.qinfo("output","TPsQueue",cmd.qdir.output)),
 
-      TPsGenerator2: cmd.mspec("TPsGenerator",
+      TPsGenerator2: cmd.mspec("TPsGenerator2",
 		    "TriggerPrimitiveSupernova",
 		    cmd.qinfo("output","TPsQueue",cmd.qdir.output)),
 
@@ -37,7 +38,7 @@ local modules = {
 
 
       TCsGenerator: cmd.mspec("TCsGenerator",
-		    "DAQTriggerCandidateMake",
+		    "DAQTriggerCandidateMaker",
 		    [cmd.qinfo("input","TAsQueue",cmd.qdir.input),cmd.qinfo("output","TCsQueue",cmd.qdir.output)]),
 };
 
@@ -45,7 +46,10 @@ local modules = {
 ///////////	Conf
 [
 	cmd.init(queues,modules) { waitms: 1000},
-	cmd.conf("[TCsGenerator]") { waitms: 1000 },
+//	cmd.init([queues.TPsQueue,queues.TAsQueue,queues.TCsQueue],[modules.TPsGenerator,modules.TPsGenerator2,modules.TAsGenerator,modules.TCsGenerator]) { waitms: 1000},
+//	cmd.conf("DAQTriggerCandidateMaker",test.conf()) { waitms: 1000 },
+//	cmd.conf("DAQTriggerCandidateMaker") { waitms: 1000 },
+	cmd.conf([cmd.mcmd("DAQTriggerCandidateMaker")]) { waitms: 1000 },
 	cmd.start(42) { waitms: 1000 },
 	cmd.stop() { waitms: 1000 },
 
