@@ -69,12 +69,6 @@ namespace dunedaq {
     
       // Generation
       std::default_random_engine generator;
-      std::uniform_int_distribution<int>     rdm_channel             = std::uniform_int_distribution<int>    (0, 2560);
-      std::uniform_int_distribution<int>     rdm_nhit                = std::uniform_int_distribution<int>    (0, 3);
-      std::normal_distribution<double>       rdm_adc                 = std::normal_distribution<double>      (20, 5);
-      std::normal_distribution<double>       rdm_time_over_threshold = std::normal_distribution<double>      (100, 20); // nanosec
-      std::normal_distribution<double>       rdm_start_time          = std::normal_distribution<double>      (0, 20); // nanosec
-      std::uniform_real_distribution<double> rdm_peak_time           = std::uniform_real_distribution<double>(0,1);
 
     };
 
@@ -169,28 +163,19 @@ namespace dunedaq {
         std::cout << "\033[32m TPs vector size: " << tps_vector.size() << "\033[0m  ";
       std::vector<TriggerPrimitive> tps;
       int EvtNo = tps_vector.size();
-      //auto nhit = rdm_nhit(generator);
-      //auto central_channel = rdm_channel(generator);
       for (int i=0; i<EvtNo; ++i) {
         TriggerPrimitive tp{};
 
-        //double tot  = rdm_time_over_threshold(generator);
-        //double peak = rdm_peak_time(generator)*tot;
-
-        //std::chrono::nanoseconds tot_time((int)tot);
-        //std::chrono::nanoseconds peak_time((int)peak);
-
-        //auto tp_start_time = std::chrono::steady_clock::now();
-        tp.time_start          = tps_vector[i][0];//pd_clock(tp_start_time.time_since_epoch()).count();
+        tp.time_start          = tps_vector[i][0];
         std::cout << "\033[32mtp.time_start : " << tp.time_start << "\033[0m  ";
-        tp.time_over_threshold = tps_vector[i][1];//pd_clock(tot_time).count();
-        tp.time_peak           = tps_vector[i][2];//pd_clock((tp_start_time+peak_time).time_since_epoch()).count();
-        tp.channel             = tps_vector[i][3];//central_channel+i;
+        tp.time_over_threshold = tps_vector[i][1];
+        tp.time_peak           = tps_vector[i][2];
+        tp.channel             = tps_vector[i][3];
         std::cout << "\033[32mtp.channel : " << tp.channel << "\033[0m\n";
-        tp.time_over_threshold = tps_vector[i][4];//pd_clock(tot_time).count();
-        tp.adc_integral        = tps_vector[i][5];//rdm_adc(generator);
-        tp.adc_peak            = tps_vector[i][6];//rdm_adc(generator);
-        tp.detid               = tps_vector[i][7];//tp.channel;
+        tp.time_over_threshold = tps_vector[i][4];
+        tp.adc_integral        = tps_vector[i][5];
+        tp.adc_peak            = tps_vector[i][6];
+        tp.detid               = tps_vector[i][7];
         tps.push_back(tp);
       }
       return tps;
