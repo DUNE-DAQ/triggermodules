@@ -2,6 +2,7 @@
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/DAQSink.hpp"
 #include "dune-trigger-algs/TriggerPrimitive.hh"
+#include "ers/ers.h"
 
 #include "CommonIssues.hpp"
 
@@ -52,7 +53,7 @@ namespace dunedaq {
 
       // Read csv file
       std::vector<std::vector<int>> ReadCSV(const std::string filename);
-      std::string filename = "/home/lukas.arnold/appfwk-env/sourcecode/DAQDuneTriggers/example.csv";
+      std::string filename;
       std::vector<std::vector<int>> output_vector;
 
       // Generation
@@ -65,6 +66,8 @@ namespace dunedaq {
       std::unique_ptr<sink_t> outputQueue_;
 
       std::chrono::milliseconds queueTimeout_;
+
+
 
     
       // Generation
@@ -133,9 +136,14 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting init() method";
     }
 
-    void TriggerPrimitiveFromFile::do_configure(const nlohmann::json& /*args*/) {
+    void TriggerPrimitiveFromFile::do_configure(const nlohmann::json& config /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      
+      auto params = config.get<triggerprimitivefromfile::ConfParams>();
+      filename = params.filename;
+      // Check if file is loaded
+      std::ifstream src(filename);
+      if(!src.is_open()) throw InvalidConfiguration(ERS_HERE);
+      src.close();
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_configure() method";
     }
 

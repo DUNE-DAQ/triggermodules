@@ -49,7 +49,9 @@ local modules = {
 	cmd.init([queues.TPsQueue,queues.TAsQueue,queues.TCsQueue],
 		[modules.TPsGenerator, modules.TAsGenerator, modules.TCsGenerator])
 		{ waitms: 1000},
-	cmd.conf(	[cmd.mcmd("TriggerPrimitiveFromFile"),cmd.mcmd("DAQTriggerActivityMaker"),cmd.mcmd("DAQTriggerCandidateMaker")])
+//	cmd.conf(	[cmd.mcmd("TriggerPrimitiveFromFile"),cmd.mcmd("DAQTriggerActivityMaker"),cmd.mcmd("DAQTriggerCandidateMaker")])
+	cmd.conf(	[cmd.mcmd("TriggerPrimitiveFromFile",triggerprimitivefromfile.ConfParams(
+			   filename=/tmp/example.csv))])
 		{ waitms: 1000},//,"TAsGenerator", "TPsGenerator"]),
 	cmd.start(40){ waitms: 1000},
 	cmd.stop(){ waitms: 1000},
