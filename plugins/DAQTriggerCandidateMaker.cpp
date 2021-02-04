@@ -15,6 +15,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <fstream>
 
 
 using namespace DuneTriggerAlgs;
@@ -132,10 +133,14 @@ namespace dunedaq {
 
         std::vector<TriggerCandidate> tcs;
         this->operator()(activ,tcs);
+	std::string outputfilename = "/scratch/tc.out";
+	ofstream = outputfile;
+	outputfile.open(outputfilename);
         
         std::string oss_prog = "Activity received #"+std::to_string(receivedCount);
         ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog));
         for (auto const& tc: tcs) {
+          outputfile << tc;
           std::cout << "\033[35mtc.time_start : " << tc.time_start << "\033[0m  ";
           std::cout << "\033[35mtc.time_end : "   << tc.time_end << "\033[0m\n";
         }
@@ -150,11 +155,12 @@ namespace dunedaq {
             } catch (const dunedaq::appfwk::QueueTimeoutExpired& excpt) {
               std::ostringstream oss_warn;
               oss_warn << "push to output queue \"" << outputQueue_->get_name() << "\"";
-              ers::warning(dunedaq::appfwk::QueueTimeoutExpired(ERS_HERE, get_name(), oss_warn.str(),
+		      ers::warning(dunedaq::appfwk::QueueTimeoutExpired(ERS_HERE, get_name(), oss_warn.str(),
                                                                 std::chrono::duration_cast<std::chrono::milliseconds>(queueTimeout_).count()));
             }
           }
         }
+	outputfile.close();
       }
 
       std::ostringstream oss_summ;

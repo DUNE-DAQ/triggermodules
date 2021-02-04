@@ -1,6 +1,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/DAQSink.hpp"
+#include "DAQDuneTriggers/triggerprimitivefromfile/Nljs.hpp"
 #include "dune-trigger-algs/TriggerPrimitive.hh"
 #include "ers/ers.h"
 
@@ -138,12 +139,12 @@ namespace dunedaq {
 
     void TriggerPrimitiveFromFile::do_configure(const nlohmann::json& config /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      auto params = config.get<triggerprimitivefromfile::ConfParams>();
+      auto params = config.get<dunedaq::DAQDuneTriggers::triggerprimitivefromfile::Conf>();
       filename = params.filename;
       // Check if file is loaded
-      std::ifstream src(filename);
-      if(!src.is_open()) throw InvalidConfiguration(ERS_HERE);
-      src.close();
+      // std::ifstream src(filename);
+      // if(!src.is_open()) throw InvalidConfiguration(ERS_HERE);
+	      // src.close();
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_configure() method";
     }
 
