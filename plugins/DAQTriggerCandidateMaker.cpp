@@ -41,6 +41,7 @@ namespace dunedaq {
       void do_configure_threshold(const nlohmann::json& obj);
 
       dunedaq::appfwk::ThreadHelper thread_;
+
       void do_work(std::atomic<bool>&);
 
       //std::unique_ptr<dunedaq::appfwk::DAQSource<TriggerActivity>> inputQueue_;
@@ -119,6 +120,7 @@ namespace dunedaq {
       int receivedCount = 0;
       int sentCount = 0;
       TriggerActivity activ;
+      std::string outputfilename = "/scratch/tc.out";
 
       while (running_flag.load()) {
         TLOG(TLVL_CANDIDATE) << get_name() << ": Going to receive data from input queue";
@@ -133,14 +135,19 @@ namespace dunedaq {
 
         std::vector<TriggerCandidate> tcs;
         this->operator()(activ,tcs);
-	std::string outputfilename = "/scratch/tc.out";
-	ofstream = outputfile;
+	std::ofstream outputfile;
 	outputfile.open(outputfilename);
         
         std::string oss_prog = "Activity received #"+std::to_string(receivedCount);
         ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog));
         for (auto const& tc: tcs) {
-          outputfile << tc;
+          outputfile << tc.time_start << "\n";
+          outputfile << tc.time_end<< "\n";
+          outputfile << tc.time_decided<< "\n";
+          outputfile << tc.detid << "\n";
+          outputfile << tc.type << "\n";
+          outputfile << tc.algorithm << "\n";
+          outputfile << tc.version << "\n\n";
           std::cout << "\033[35mtc.time_start : " << tc.time_start << "\033[0m  ";
           std::cout << "\033[35mtc.time_end : "   << tc.time_end << "\033[0m\n";
         }
