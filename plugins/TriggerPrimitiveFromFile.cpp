@@ -1,7 +1,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/DAQSink.hpp"
-#include "DAQDuneTriggers/triggerprimitivefromfile/Nljs.hpp"
+#include "Nljs.hpp"
 #include "dune-trigger-algs/TriggerPrimitive.hh"
 #include "ers/ers.h"
 
@@ -76,19 +76,16 @@ namespace dunedaq {
 
     };
 
-
-
-    
     TriggerPrimitiveFromFile::TriggerPrimitiveFromFile(const std::string& name) :
       dunedaq::appfwk::DAQModule(name),
       thread_(std::bind(&TriggerPrimitiveFromFile::do_work, this, std::placeholders::_1)),
       outputQueue_(),
-      queueTimeout_(100),
-      generator(){
-      register_command("configure"  , &TriggerPrimitiveFromFile::do_configure  );
+      queueTimeout_(100)
+      {
+      register_command("conf"       , &TriggerPrimitiveFromFile::do_configure  );
       register_command("start"      , &TriggerPrimitiveFromFile::do_start      );
       register_command("stop"       , &TriggerPrimitiveFromFile::do_stop       );
-      register_command("unconfigure", &TriggerPrimitiveFromFile::do_unconfigure);
+      register_command("scrap"      , &TriggerPrimitiveFromFile::do_unconfigure);
     }
 
     std::vector<std::vector<int>> TriggerPrimitiveFromFile::ReadCSV(const std::string filename) {
@@ -139,8 +136,9 @@ namespace dunedaq {
 
     void TriggerPrimitiveFromFile::do_configure(const nlohmann::json& config /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      auto params = config.get<dunedaq::DAQDuneTriggers::triggerprimitivefromfile::Conf>();
+      auto params = config.get<dunedaq::DAQDuneTrigger::triggerprimitivefromfile::Conf>();
       filename = params.filename;
+
       // Check if file is loaded
       // std::ifstream src(filename);
       // if(!src.is_open()) throw InvalidConfiguration(ERS_HERE);
@@ -181,10 +179,10 @@ namespace dunedaq {
         tp.time_peak           = tps_vector[i][2];
         tp.channel             = tps_vector[i][3];
         std::cout << "\033[32mtp.channel : " << tp.channel << "\033[0m\n";
-        tp.time_over_threshold = tps_vector[i][4];
-        tp.adc_integral        = tps_vector[i][5];
-        tp.adc_peak            = tps_vector[i][6];
-        tp.detid               = tps_vector[i][7];
+        tp.adc_integral        = tps_vector[i][4];
+        tp.adc_peak            = tps_vector[i][5];
+        tp.detid               = tps_vector[i][6];
+        tp.type		       = tps_vector[i][7];
         tps.push_back(tp);
       }
       return tps;

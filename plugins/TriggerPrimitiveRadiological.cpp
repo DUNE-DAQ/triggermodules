@@ -149,6 +149,7 @@ namespace dunedaq {
         tp.adc_integral        = rdm_adc(generator);
         tp.adc_peak            = rdm_adc(generator);
         tp.detid               = tp.channel;
+        std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << ","<< ","<< tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
         tps.push_back(tp);
       }
       return tps;
