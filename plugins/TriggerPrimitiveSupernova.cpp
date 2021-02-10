@@ -68,7 +68,7 @@ namespace dunedaq {
       std::normal_distribution<double>       rdm_start_time          = std::normal_distribution<double>      (0, 20); // nanosec
       std::uniform_real_distribution<double> rdm_peak_time           = std::uniform_real_distribution<double>(0,1);
 
-      int m_n_supernova_evt;
+      int m_n_supernova_evt = 0;
     };
 
     
