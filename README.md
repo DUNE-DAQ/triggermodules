@@ -1,20 +1,20 @@
-# DAQDuneTriggers
+# triggermodules
 
 ## Broad overview / Philosophy
 
-This package is the prototype interface between DuneTriggerAlgs (https://github.com/thiagojcb/DuneTriggerAlgs) and appfwk (https://github.com/DUNE-DAQ/appfwk). This is where the queues, DAQModule and their are implemented.
+This package is the prototype interface between triggeralgs (https://github.com/DUNE-DAQ/triggeralgs) and appfwk (https://github.com/DUNE-DAQ/appfwk). This is where the queues, DAQModule and their are implemented.
 
-## Installation
+## Installation (for daq-v2.0.0)
 To install you need to first have the application framework, you can find instructions here: https://github.com/DUNE-DAQ/appfwk/wiki/Compiling-and-running-under-v2.0.0
 
-Then, you need to build DuneTriggerAlgs, which is a dependency of this package, the way to do that is here: https://github.com/thiagojcb/DuneTriggerAlgs.git
+Then, you need to build triggeralgs, which is a dependency of this package.
 
-With both appfwk and DuneTriggerAlgs installed, go to "MyTopDir/sourcecode", under appfwk installation and clone this directory:
+With both appfwk and triggeralgs installed, go to "MyTopDir/sourcecode", under appfwk installation and clone this directory:
 ```
-git clone https://github.com/thiagojcb/DAQDuneTriggers.git
+git clone https://github.com/DUNE-DAQ/triggermodules.git
 ```
 
-You must also add "DAQDuneTriggers" on the list at the bottom of "./sourcecode/CMakeLists.txt", and you should tell the compiler where DuneTriggerAlgs was installed:
+You must also add "triggermodules" on the list at the bottom of "./sourcecode/CMakeLists.txt", and you should tell the compiler where DuneTriggerAlgs was installed:
 ```
 export CMAKE_PREFIX_PATH=/area/where/DuneTriggerAlgs/is/installed:${CMAKE_PREFIX_PATH}
 ```
@@ -33,7 +33,7 @@ cd /area/where/daq/is/installed/
 source daq-buildtools/setup_dbt.sh
 cd MyTopDir
 setup_runtime_environment
-daq_application -c stdin://sourcecode/DAQDuneTriggers/test/DAQDuneTriggers-trigger-app.json
+daq_application -c stdin://sourcecode/triggermodules/test/DAQDuneTriggers-trigger-app.json
 ```
 
 ## Implementation
