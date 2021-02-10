@@ -4,8 +4,8 @@
 
 This package is the prototype interface between triggeralgs (https://github.com/DUNE-DAQ/triggeralgs) and appfwk (https://github.com/DUNE-DAQ/appfwk). This is where the queues, DAQModule and their are implemented.
 
-## Installation (for daq-v2.0.0)
-To install you need to first have the application framework, you can find instructions here: https://github.com/DUNE-DAQ/appfwk/wiki/Compiling-and-running-under-v2.0.0
+## Installation (for daq-v2.2.0)
+To install you need to first have the application framework, you can find instructions here: https://github.com/DUNE-DAQ/appfwk/wiki/Compiling-and-running-under-v2.2.0
 
 Then, you need to build triggeralgs, which is a dependency of this package.
 
@@ -14,14 +14,14 @@ With both appfwk and triggeralgs installed, go to "MyTopDir/sourcecode", under a
 git clone https://github.com/DUNE-DAQ/triggermodules.git
 ```
 
-You must also add "triggermodules" on the list at the bottom of "./sourcecode/CMakeLists.txt", and you should tell the compiler where DuneTriggerAlgs was installed:
+You must also add "triggermodules" on the list at the bottom of "./sourcecode/CMakeLists.txt", and you should tell the compiler where triggeralgs was installed:
 ```
-export CMAKE_PREFIX_PATH=/area/where/DuneTriggerAlgs/is/installed:${CMAKE_PREFIX_PATH}
+export CMAKE_PREFIX_PATH=/area/where/triggerals/is/installed:${CMAKE_PREFIX_PATH}
 ```
 
 Now you are ready to install it:
 ```
-build_daq_software.sh --install
+dbt-build.sh --install
 ```
 
 Hopefully, you didn't get any errors and you now have everything compiled.
