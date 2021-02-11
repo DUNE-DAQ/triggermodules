@@ -17,12 +17,12 @@
 #include <vector>
 
 
-using namespace DuneTriggerAlgs;
+using namespace triggeralgs;
 
 namespace dunedaq {
   namespace trigger {
 
-    class DAQTriggerActivityMaker: public dunedaq::appfwk::DAQModule, DuneTriggerAlgs::TriggerActivityMakerSupernova {
+    class DAQTriggerActivityMaker: public dunedaq::appfwk::DAQModule, triggeralgs::TriggerActivityMakerSupernova {
     public:
       explicit DAQTriggerActivityMaker(const std::string& name);
 

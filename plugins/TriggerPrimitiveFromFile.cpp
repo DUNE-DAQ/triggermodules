@@ -17,7 +17,7 @@
 
 
 using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;
-using namespace DuneTriggerAlgs;
+using namespace triggeralgs;
 
 namespace dunedaq {
   namespace csv_generator {

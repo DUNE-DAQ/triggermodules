@@ -18,12 +18,12 @@
 #include <fstream>
 
 
-using namespace DuneTriggerAlgs;
+using namespace triggeralgs;
 
 namespace dunedaq {
   namespace trigger {
 
-    class DAQTriggerCandidateMaker: public dunedaq::appfwk::DAQModule, DuneTriggerAlgs::TriggerCandidateMakerSupernova {
+    class DAQTriggerCandidateMaker: public dunedaq::appfwk::DAQModule, triggeralgs::TriggerCandidateMakerSupernova {
     public:
       explicit DAQTriggerCandidateMaker(const std::string& name);
 

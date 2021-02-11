@@ -2,9 +2,9 @@
 	project(DAQDuneTriggers VERSION 2.0.0)
 
 	# JCF, Dec-15-2020
-	# At the command line you need to add the installation directory of the DuneTriggerAlgs package before attempting to build, i.e.
+	# At the command line you need to add the installation directory of the triggeralgs package before attempting to build, i.e.
 	#
-	# export CMAKE_PREFIX_PATH=/area/where/DuneTriggerAlgs/is/installed:${CMAKE_PREFIX_PATH}
+	# export CMAKE_PREFIX_PATH=/area/where/triggeralgs/is/installed:${CMAKE_PREFIX_PATH}
 	#
 
 	find_package(daq-cmake REQUIRED )
@@ -12,7 +12,7 @@
 	daq_setup_environment()
 
 	find_package(appfwk REQUIRED)
-	find_package(DuneTriggerAlgs REQUIRED)
+	find_package(triggeralgs REQUIRED)
 
 	##############################################################################
 
