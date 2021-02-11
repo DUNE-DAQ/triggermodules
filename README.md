@@ -33,7 +33,7 @@ cd /area/where/daq/is/installed/
 source daq-buildtools/setup_dbt.sh
 cd MyTopDir
 setup_runtime_environment
-daq_application -c stdin://sourcecode/triggermodules/test/DAQDuneTriggers-trigger-app.json
+daq_application -c sourcecode/triggermodules/schema/triggermodules-RandomTriggerPrimitive-app.json
 ```
 
 ## Implementation
