@@ -1,5 +1,5 @@
 	cmake_minimum_required(VERSION 3.12)
-	project(DAQDuneTriggers VERSION 2.0.0)
+	project(triggermodules VERSION 2.2.0)
 
 	# JCF, Dec-15-2020
 	# At the command line you need to add the installation directory of the triggeralgs package before attempting to build, i.e.

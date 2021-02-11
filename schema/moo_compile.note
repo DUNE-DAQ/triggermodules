@@ -1,6 +1,6 @@
 # 15-Jan-2021, TSB
 # This file simply has a few notes on running the 'moo compile' command to
-# generate the DAQDuneTriggers-trigger-app.json file from DAQDuneTriggers-trigger-app.jsonnet.
+# generate the triggermodules-trigger-app.json file from triggermodules-trigger-app.jsonnet.
 # Based on listrev one.
 
-moo -M "`pwd`/../../appfwk/schema" compile DAQDuneTriggers-trigger-app.jsonnet > ../test/DAQDuneTriggers-trigger-app.json
+moo -M "`pwd`/../../appfwk/schema" compile triggermodules-trigger-app.jsonnet > ../test/triggermodules-trigger-app.json

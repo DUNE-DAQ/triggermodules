@@ -1,6 +1,6 @@
 local moo = import "moo.jsonnet";
 local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
-local TPsGenerator = import "sourcecode/DAQDuneTriggers/schema/DAQDuneTriggers-TriggerPrimitiveFromFile-make.jsonnet";
+local TPsGenerator = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
 
 ///////////	Queues
 local queues = {

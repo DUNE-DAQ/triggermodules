@@ -1,4 +1,4 @@
-// Example commands for a DAQDuneTriggers job.
+// Example commands for a triggermodules job.
 //
 // It is TP-TA-TC sequence.
 //       TP_generator -> (TP) -> TA_maker -> (TA) -> TC_maker -> (TC)
