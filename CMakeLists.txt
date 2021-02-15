@@ -22,7 +22,7 @@
 	daq_add_plugin(TriggerPrimitiveHE           duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 	daq_add_plugin(DAQTriggerActivityMaker      duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 	daq_add_plugin(DAQTriggerCandidateMaker     duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
-		# daq_add_plugin(DAQTriggerDecisionMaker      duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
+	daq_add_plugin(DAQTriggerDecisionMaker      duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 
 ##############################################################################
 
