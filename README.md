@@ -14,7 +14,7 @@ With both appfwk and triggeralgs installed, go to "MyTopDir/sourcecode", under a
 git clone https://github.com/DUNE-DAQ/triggermodules.git
 ```
 
-You must also add "triggermodules" on the list at the bottom of "./sourcecode/CMakeLists.txt", and you should tell the compiler where triggeralgs was installed:
+Before installing it, you must tell the compiler where "triggeralgs" was installed:
 ```
 export CMAKE_PREFIX_PATH=/area/where/triggerals/is/installed:${CMAKE_PREFIX_PATH}
 ```
