@@ -4,6 +4,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
+#include "triggermodules/daqtriggeractivitymaker/Nljs.hpp"
 #include "dune-trigger-algs/Supernova/TriggerActivityMaker_Supernova.hh"
 
 #include "CommonIssues.hpp"
@@ -41,6 +42,9 @@ namespace dunedaq {
       dunedaq::appfwk::ThreadHelper thread_;
       void do_work(std::atomic<bool>&);
 
+      int64_t time_tolerance;
+      int32_t channel_tolerance;
+
       //std::unique_ptr<dunedaq::appfwk::DAQSource<TriggerPrimitive>> inputQueue_;
       using source_t = dunedaq::appfwk::DAQSource<TriggerPrimitive>;
       std::unique_ptr<source_t> inputQueue_;
@@ -62,7 +66,7 @@ namespace dunedaq {
       
       register_command("start"    , &DAQTriggerActivityMaker::do_start    );
       register_command("stop"     , &DAQTriggerActivityMaker::do_stop     );
-      register_command("configure", &DAQTriggerActivityMaker::do_configure);
+      register_command("conf", &DAQTriggerActivityMaker::do_configure);
     }
 
     void DAQTriggerActivityMaker::init(const nlohmann::json& iniobj) {
@@ -95,9 +99,18 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_stop() method";
     }
 
-    void DAQTriggerActivityMaker::do_configure(const nlohmann::json& /*args*/) {
+    void DAQTriggerActivityMaker::do_configure(const nlohmann::json& config/*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      // thread_.stop_working_thread();
+      auto params = config.get<dunedaq::triggermodules::daqtriggeractivitymaker::Conf>();
+      
+      time_tolerance = params.time_tolerance;
+      channel_tolerance = params.channel_tolerance;
+      try {
+        m_time_tolerance = time_tolerance;
+        m_channel_tolerance = channel_tolerance;
+      } catch(...)  {
+        ERS_LOG(get_name() << " unsuccessfully configured");
+      }
       ERS_LOG(get_name() << " successfully configured");
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_configure() method";
     }

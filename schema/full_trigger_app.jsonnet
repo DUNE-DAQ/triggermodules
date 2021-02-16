@@ -1,6 +1,7 @@
 local moo = import "moo.jsonnet";
 local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
-local TPsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
+local TPsGeneratorFromFileMake = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
+local TAsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerActivityMaker-make.jsonnet";
 local TCsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerCandidateMaker-make.jsonnet";
 local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerDecisionMaker-make.jsonnet";
 
@@ -67,7 +68,7 @@ local modules = {
 		{ waitms: 1000},
 	cmd.conf([
 		cmd.mcmd("TPsGenerator"),
-		cmd.mcmd("TAsGenerator"),
+		cmd.mcmd("TAsGenerator",TAsGeneratorMake.conf(250,2)),
 		cmd.mcmd("TCsGenerator",TCsGeneratorMake.conf(500000000,1,1)),
 		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1)),
 		])

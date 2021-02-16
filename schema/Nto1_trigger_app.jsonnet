@@ -1,7 +1,9 @@
 local moo = import "moo.jsonnet";
 local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
-local TPsGenerator = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
-local TCsGenerator = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerCandidateMaker-make.jsonnet";
+local TPsGeneratorFromFileMake = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
+local TAsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerActivityMaker-make.jsonnet";
+local TCsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerCandidateMaker-make.jsonnet";
+local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerDecisionMaker-make.jsonnet";
 
 ///////////	Queues
 local queues = {
@@ -39,7 +41,7 @@ local modules = {
 			cmd.qdir.output)]),
 
 	TPsGenerator1b: cmd.mspec("TPsGenerator1b",
-		"TriggerPrimitiveSupernova",
+		"TriggerPrimitiveRadiological",
 		[cmd.qinfo("output",
 			"TPsQueue1",
 			cmd.qdir.output)]),
@@ -51,7 +53,7 @@ local modules = {
 			cmd.qdir.output)]),
 
 	TPsGenerator2b: cmd.mspec("TPsGenerator2b",
-		"TriggerPrimitiveSupernova",
+		"TriggerPrimitiveFromFile",
 		[cmd.qinfo("output",
 			"TPsQueue2",
 			cmd.qdir.output)]),
@@ -116,11 +118,14 @@ local modules = {
 			modules.TDsGenerator])
 		{ waitms: 1000},
 
-	cmd.conf(	[cmd.mcmd("TriggerPrimitiveRadiological"),
-			cmd.mcmd("DAQTriggerActivityMaker"),
-			cmd.mcmd("DAQTriggerCandidateMaker",TCsGenerator.conf(2,2)),
-			cmd.mcmd("DAQTriggerCandidateMaker",TCsGenerator.conf(2,2)),
-			cmd.mcmd("TriggerDecisionMaker")])
+	cmd.conf([
+		cmd.mcmd("TPsGenerator2b",TPsGeneratorFromFileMake.conf("/tmp/test2.csv")),
+		cmd.mcmd("TAsGenerator1",TAsGeneratorMake.conf(250,2)),
+		cmd.mcmd("TAsGenerator2",TAsGeneratorMake.conf(250,2)),
+		cmd.mcmd("TCsGenerator1",TCsGeneratorMake.conf(500000000,1,1)),
+		cmd.mcmd("TCsGenerator2",TCsGeneratorMake.conf(500000000,1,1)),
+		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1))
+		])
 		{ waitms: 1000},
 
 	cmd.start(40){ waitms: 1000},
