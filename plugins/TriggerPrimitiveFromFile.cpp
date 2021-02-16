@@ -52,13 +52,13 @@ namespace dunedaq {
       void do_work(std::atomic<bool>&);
 
       // Read csv file
-      std::vector<std::vector<int>> ReadCSV(const std::string filename);
+      std::vector<std::vector<int64_t>> ReadCSV(const std::string filename);
       std::string filename;
-      std::vector<std::vector<int>> output_vector;
+      std::vector<std::vector<int64_t>> output_vector;
 
       // Generation
       //ReadCS();
-      std::vector<TriggerPrimitive> GetEvts(std::vector<std::vector<int>> tps_vector);
+      std::vector<TriggerPrimitive> GetEvts(std::vector<std::vector<int64_t>> tps_vector);
 
       // Configuration
       //std::unique_ptr<dunedaq::appfwk::DAQSink<TriggerPrimitive>> outputQueue_;
@@ -81,11 +81,11 @@ namespace dunedaq {
       register_command("scrap"      , &TriggerPrimitiveFromFile::do_unconfigure);
     }
 
-    std::vector<std::vector<int>> TriggerPrimitiveFromFile::ReadCSV(const std::string filename) {
-	std::vector<std::vector<int>> tps_vector;
+    std::vector<std::vector<int64_t>> TriggerPrimitiveFromFile::ReadCSV(const std::string filename) {
+	std::vector<std::vector<int64_t>> tps_vector;
         std::ifstream src(filename);
         if(!src.is_open()) throw std::runtime_error("Could not open file");
-        int val;
+        int64_t val;
 
         std::string buffer;
         char sep = ',';
@@ -158,7 +158,7 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_unconfigure() method";
     }
 
-    std::vector<TriggerPrimitive> TriggerPrimitiveFromFile::GetEvts(std::vector<std::vector<int>> tps_vector) {
+    std::vector<TriggerPrimitive> TriggerPrimitiveFromFile::GetEvts(std::vector<std::vector<int64_t>> tps_vector) {
         std::cout << "\033[32m ENTERING TP GENERATOR WITH SOURCE FILE " << filename << "\033[0m  ";
         std::cout << "\033[32m TPs vector size: " << tps_vector.size() << "\033[0m  ";
       std::vector<TriggerPrimitive> tps;
@@ -166,16 +166,16 @@ namespace dunedaq {
       for (int i=0; i<EvtNo; ++i) {
         TriggerPrimitive tp{};
 
-        tp.time_start          = tps_vector[i][0];
+        tp.time_start          = (int64_t)tps_vector[i][0];
         std::cout << "\033[32mtp.time_start : " << tp.time_start << "\033[0m  ";
-        tp.time_over_threshold = tps_vector[i][1];
-        tp.time_peak           = tps_vector[i][2];
-        tp.channel             = tps_vector[i][3];
+        tp.time_over_threshold = (int64_t)tps_vector[i][1];
+        tp.time_peak           = (int32_t)tps_vector[i][2];
+        tp.channel             = (uint32_t)tps_vector[i][3];
         std::cout << "\033[32mtp.channel : " << tp.channel << "\033[0m\n";
-        tp.adc_integral        = tps_vector[i][4];
-        tp.adc_peak            = tps_vector[i][5];
-        tp.detid               = tps_vector[i][6];
-        tp.type		       = tps_vector[i][7];
+        tp.adc_integral        = (uint16_t)tps_vector[i][4];
+        tp.adc_peak            = (uint16_t)tps_vector[i][5];
+        tp.detid               = (uint32_t)tps_vector[i][6];
+        tp.type		       = (uint32_t)tps_vector[i][7];
         tps.push_back(tp);
       }
       return tps;
@@ -191,7 +191,7 @@ namespace dunedaq {
         std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000));
 
 	
-        std::vector<std::vector<int>> output_vector = ReadCSV(filename);
+        std::vector<std::vector<int64_t>> output_vector = ReadCSV(filename);
         std::vector<TriggerPrimitive> tps = GetEvts(output_vector);
 
         if (tps.size() == 0) {

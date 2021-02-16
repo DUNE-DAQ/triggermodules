@@ -160,6 +160,9 @@ namespace dunedaq {
           outputfile << tc.type << "\n";
           outputfile << tc.algorithm << "\n";
           outputfile << tc.version << "\n\n";*/
+         std::cout << "\033[35mtc.time_start : " << tc.time_start << "\033[0m  ";
+         std::cout << "\033[35mtc.time_end : "   << tc.time_end << "\033[0m\n";
+
         }
         while(tcs.size()) {
           bool successfullyWasSent = false;
