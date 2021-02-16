@@ -1,5 +1,7 @@
 local moo = import "moo.jsonnet";
 local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
+local TPsGenerator = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
+local TCsGenerator = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerCandidateMaker-make.jsonnet";
 
 ///////////	Queues
 local queues = {
@@ -116,7 +118,8 @@ local modules = {
 
 	cmd.conf(	[cmd.mcmd("TriggerPrimitiveRadiological"),
 			cmd.mcmd("DAQTriggerActivityMaker"),
-			cmd.mcmd("DAQTriggerCandidateMaker"),
+			cmd.mcmd("DAQTriggerCandidateMaker",TCsGenerator.conf(2,2)),
+			cmd.mcmd("DAQTriggerCandidateMaker",TCsGenerator.conf(2,2)),
 			cmd.mcmd("TriggerDecisionMaker")])
 		{ waitms: 1000},
 

@@ -60,7 +60,7 @@ namespace dunedaq {
       
       register_command("start"    , &DAQTriggerDecisionMaker::do_start    );
       register_command("stop"     , &DAQTriggerDecisionMaker::do_stop     );
-      register_command("configure_threshold", &DAQTriggerDecisionMaker::do_configure);
+      register_command("conf", &DAQTriggerDecisionMaker::do_configure);
     }
 
     void DAQTriggerDecisionMaker::init(const nlohmann::json& iniobj) {

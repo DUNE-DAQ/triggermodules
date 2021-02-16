@@ -1,7 +1,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/DAQSink.hpp"
-#include "Nljs.hpp"
+#include "triggermodules/triggerprimitivefromfile/Nljs.hpp"
 #include "dune-trigger-algs/TriggerPrimitive.hh"
 #include "ers/ers.h"
 
@@ -10,7 +10,6 @@
 #include "appfwk/cmd/Nljs.hpp"
 
 #include <chrono>
-#include <random>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -67,12 +66,6 @@ namespace dunedaq {
       std::unique_ptr<sink_t> outputQueue_;
 
       std::chrono::milliseconds queueTimeout_;
-
-
-
-    
-      // Generation
-      std::default_random_engine generator;
 
     };
 
@@ -136,7 +129,7 @@ namespace dunedaq {
 
     void TriggerPrimitiveFromFile::do_configure(const nlohmann::json& config /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      auto params = config.get<dunedaq::DAQDuneTrigger::triggerprimitivefromfile::Conf>();
+      auto params = config.get<dunedaq::triggermodules::triggerprimitivefromfile::Conf>();
       filename = params.filename;
 
       // Check if file is loaded
@@ -166,7 +159,7 @@ namespace dunedaq {
     }
 
     std::vector<TriggerPrimitive> TriggerPrimitiveFromFile::GetEvts(std::vector<std::vector<int>> tps_vector) {
-        std::cout << "\033[32m ENTERING TP GENERATOR" << filename << "\033[0m  ";
+        std::cout << "\033[32m ENTERING TP GENERATOR WITH SOURCE FILE " << filename << "\033[0m  ";
         std::cout << "\033[32m TPs vector size: " << tps_vector.size() << "\033[0m  ";
       std::vector<TriggerPrimitive> tps;
       int EvtNo = tps_vector.size();
