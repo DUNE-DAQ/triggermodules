@@ -4,6 +4,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
+#include "triggermodules/daqtriggercandidatemaker/Nljs.hpp"
 #include "dune-trigger-algs/Supernova/TriggerCandidateMaker_Supernova.hh"
 
 #include "CommonIssues.hpp"
@@ -36,13 +37,18 @@ namespace dunedaq {
       void init(const nlohmann::json& obj) override;
       
     private:
+      void do_configure(const nlohmann::json& obj);
       void do_start(const nlohmann::json& obj);
       void do_stop(const nlohmann::json& obj);
-      void do_configure(const nlohmann::json& obj);
+      void do_unconfigure(const nlohmann::json& obj);
 
       dunedaq::appfwk::ThreadHelper thread_;
 
       void do_work(std::atomic<bool>&);
+
+      int64_t window;
+      uint16_t thresh;
+      uint16_t hit_thresh;
 
       //std::unique_ptr<dunedaq::appfwk::DAQSource<TriggerActivity>> inputQueue_;
       using source_t = dunedaq::appfwk::DAQSource<TriggerActivity>;
@@ -63,9 +69,10 @@ namespace dunedaq {
         outputQueue_(nullptr),
         queueTimeout_(100) {
       
+      register_command("conf",    &DAQTriggerCandidateMaker::do_configure);
       register_command("start"    , &DAQTriggerCandidateMaker::do_start    );
       register_command("stop"     , &DAQTriggerCandidateMaker::do_stop     );
-      register_command("configure", &DAQTriggerCandidateMaker::do_configure);
+      register_command("scrap"      , &DAQTriggerCandidateMaker::do_unconfigure);
     }
 
     void DAQTriggerCandidateMaker::init(const nlohmann::json& iniobj) {
@@ -84,6 +91,26 @@ namespace dunedaq {
 
     }
 
+    void DAQTriggerCandidateMaker::do_configure(const nlohmann::json& config /*args*/) {
+      TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
+      auto params = config.get<dunedaq::triggermodules::daqtriggercandidatemaker::Conf>();
+      
+      window = params.time_window;
+      thresh = params.threshold;
+      hit_thresh = params.hit_threshold;
+      try {
+        m_time_window = {window};
+        m_threshold = {thresh};
+        m_hit_threshold = {hit_thresh};
+      } catch(...)  {
+        ERS_LOG(get_name() << " unsuccessfully configured");
+      }
+      ERS_LOG(get_name() << " successfully configured");
+      TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_configure() method";
+    }
+
+
+
     void DAQTriggerCandidateMaker::do_start(const nlohmann::json& /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_start() method";
       thread_.start_working_thread();
@@ -99,28 +126,15 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_stop() method";
     }
 
-    void DAQTriggerCandidateMaker::do_configure(const nlohmann::json& /*args*/) {
-      TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      
-      int thresh = m_threshold;
-      try {
-        //thresh = std::stoi(args.at(0));
-        m_threshold = thresh;
-      } catch(...)  {
-        ERS_LOG(get_name() << " unsuccessfully configured");
-      }
-      ERS_LOG(get_name() << " successfully configured");
-      TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_configure() method";
-    }
-
-
 
     void DAQTriggerCandidateMaker::do_work(std::atomic<bool>& running_flag) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_work() method";
+          std::cout << "\033[35mthreshold : " << thresh << "\033[0m  ";
+          std::cout << "\033[35mhit_threshold: "   << hit_thresh << "\033[0m\n";
       int receivedCount = 0;
       int sentCount = 0;
       TriggerActivity activ;
-      std::string outputfilename = "/scratch/tc.out";
+      /*std::string outputfilename = "/scratch/tc.out";*/
 
       while (running_flag.load()) {
         TLOG(TLVL_CANDIDATE) << get_name() << ": Going to receive data from input queue";
@@ -135,21 +149,22 @@ namespace dunedaq {
 
         std::vector<TriggerCandidate> tcs;
         this->operator()(activ,tcs);
-	std::ofstream outputfile;
-	outputfile.open(outputfilename);
+	/*std::ofstream outputfile;
+        outputfile.open(outputfilename);*/
         
         std::string oss_prog = "Activity received #"+std::to_string(receivedCount);
         ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog));
         for (auto const& tc: tcs) {
-          outputfile << tc.time_start << "\n";
+          /*outputfile << tc.time_start << "\n";
           outputfile << tc.time_end<< "\n";
           outputfile << tc.time_decided<< "\n";
           outputfile << tc.detid << "\n";
           outputfile << tc.type << "\n";
           outputfile << tc.algorithm << "\n";
-          outputfile << tc.version << "\n\n";
-          std::cout << "\033[35mtc.time_start : " << tc.time_start << "\033[0m  ";
-          std::cout << "\033[35mtc.time_end : "   << tc.time_end << "\033[0m\n";
+          outputfile << tc.version << "\n\n";*/
+         std::cout << "\033[35mtc.time_start : " << tc.time_start << "\033[0m  ";
+         std::cout << "\033[35mtc.time_end : "   << tc.time_end << "\033[0m\n";
+
         }
         while(tcs.size()) {
           bool successfullyWasSent = false;
@@ -167,7 +182,7 @@ namespace dunedaq {
             }
           }
         }
-	outputfile.close();
+	/*outputfile.close();*/
       }
 
       std::ostringstream oss_summ;
@@ -175,6 +190,11 @@ namespace dunedaq {
                << " TCs and successfully sent " << sentCount << " TCs. ";
       ers::info(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_summ.str()));
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_work() method";
+    }
+
+    void DAQTriggerCandidateMaker::do_unconfigure(const nlohmann::json& /*args*/) {
+      TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_unconfigure() method";
+      TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_unconfigure() method";
     }
 
 

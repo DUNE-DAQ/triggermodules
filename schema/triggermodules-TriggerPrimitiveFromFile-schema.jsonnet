@@ -1,5 +1,5 @@
 local moo = import "moo.jsonnet";
-local ns = "dunedaq.DAQDuneTrigger.triggerprimitivefromfile";
+local ns = "dunedaq.triggermodules.triggerprimitivefromfile";
 local s = moo.oschema.schema(ns);
 
 local types = {

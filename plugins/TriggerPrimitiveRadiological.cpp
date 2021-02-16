@@ -145,11 +145,10 @@ namespace dunedaq {
         tp.time_peak           = pd_clock((tp_start_time+peak_time).time_since_epoch()).count();
         tp.channel             = central_channel+i;
         std::cout << "\033[32mtp.channel : " << tp.channel << "\033[0m\n";
-        tp.time_over_threshold = pd_clock(tot_time).count();
         tp.adc_integral        = rdm_adc(generator);
         tp.adc_peak            = rdm_adc(generator);
         tp.detid               = tp.channel;
-        std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << ","<< ","<< tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
+        std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << "," << tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
         tps.push_back(tp);
       }
       return tps;

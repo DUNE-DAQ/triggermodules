@@ -2,7 +2,9 @@
 #include "appfwk/DAQSink.hpp"
 #include "appfwk/DAQSource.hpp"
 #include "appfwk/ThreadHelper.hpp"
+#include "appfwk/DAQModuleHelper.hpp"
 
+#include "triggermodules/daqtriggerdecisionmaker/Nljs.hpp"
 #include "dune-trigger-algs/Supernova/TriggerDecisionMaker_Supernova.hh"
 
 #include "CommonIssues.hpp"
@@ -30,18 +32,26 @@ namespace dunedaq {
       DAQTriggerDecisionMaker(DAQTriggerDecisionMaker&&) = delete;
       DAQTriggerDecisionMaker& operator=(DAQTriggerDecisionMaker&&) = delete;
 
-      void init() override;
+      void init(const nlohmann::json& obj) override;
       
     private:
-      void do_start(const std::vector<std::string>& args);
-      void do_stop(const std::vector<std::string>& args);
-      void do_configure_threshold(const std::vector<std::string>& args);
+      void do_start    (const nlohmann::json& obj);
+      void do_stop     (const nlohmann::json& obj);
+      void do_configure(const nlohmann::json& obj);
 
       dunedaq::appfwk::ThreadHelper thread_;
       void do_work(std::atomic<bool>&);
 
-      std::unique_ptr<dunedaq::appfwk::DAQSource<TriggerCandidate>> inputQueue_;
-      std::unique_ptr<dunedaq::appfwk::DAQSink<TriggerDecision>> outputQueue_;
+      int64_t window;
+      uint16_t thresh;
+      uint16_t hit_thresh;
+
+      using source_t = dunedaq::appfwk::DAQSource<TriggerCandidate>;
+      std::unique_ptr<source_t> inputQueue_;
+
+      using sink_t = dunedaq::appfwk::DAQSink<TriggerDecision>;
+      std::unique_ptr<sink_t> outputQueue_;
+
       std::chrono::milliseconds queueTimeout_;
     };
     
@@ -55,32 +65,33 @@ namespace dunedaq {
       
       register_command("start"    , &DAQTriggerDecisionMaker::do_start    );
       register_command("stop"     , &DAQTriggerDecisionMaker::do_stop     );
-      register_command("configure_threshold", &DAQTriggerDecisionMaker::do_configure_threshold);
+      register_command("conf", &DAQTriggerDecisionMaker::do_configure);
     }
 
-    void DAQTriggerDecisionMaker::init() {
+    void DAQTriggerDecisionMaker::init(const nlohmann::json& iniobj) {
+      auto qi = appfwk::qindex(iniobj, {"input","output"});
       try {
-        inputQueue_.reset(new dunedaq::appfwk::DAQSource<TriggerCandidate>(get_config()["input"].get<std::string>()));
+	inputQueue_.reset(new source_t(qi["input"].inst));
       } catch (const ers::Issue& excpt) {
         throw dunedaq::dunetrigger::InvalidQueueFatalError(ERS_HERE, get_name(), "input", excpt);
       }
 
       try {
-        outputQueue_.reset(new dunedaq::appfwk::DAQSink<TriggerDecision>(get_config()["output"].get<std::string>()));
+	outputQueue_.reset(new sink_t(qi["output"].inst));
       } catch (const ers::Issue& excpt) {
         throw dunedaq::dunetrigger::InvalidQueueFatalError(ERS_HERE, get_name(), "output", excpt);
       }
 
     }
 
-    void DAQTriggerDecisionMaker::do_start(const std::vector<std::string>& /*args*/) {
+    void DAQTriggerDecisionMaker::do_start(const nlohmann::json& /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_start() method";
       thread_.start_working_thread();
       ERS_LOG(get_name() << " successfully started");
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_start() method";
     }
 
-    void DAQTriggerDecisionMaker::do_stop(const std::vector<std::string>& /*args*/) {
+    void DAQTriggerDecisionMaker::do_stop(const nlohmann::json& /*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_stop() method";
       thread_.stop_working_thread();
       //flush()
@@ -88,13 +99,18 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_stop() method";
     }
 
-    void DAQTriggerDecisionMaker::do_configure_threshold(const std::vector<std::string>& args) {
+    void DAQTriggerDecisionMaker::do_configure(const nlohmann::json& config/*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
+      auto params = config.get<dunedaq::triggermodules::daqtriggerdecisionmaker::Conf>();
+
+      window = params.time_window;
+      thresh = params.threshold;
+      hit_thresh = params.hit_threshold;
       
-      int thresh = m_threshold;
       try {
-        thresh = std::stoi(args.at(0));
-        m_threshold = thresh;
+        m_time_window = {window};
+        m_threshold = {thresh};
+        m_hit_threshold = {hit_thresh};
       } catch(...)  {
         ERS_LOG(get_name() << " unsuccessfully configured");
       }

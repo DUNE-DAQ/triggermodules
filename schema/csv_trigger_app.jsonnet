@@ -29,7 +29,7 @@ local queues = {
 			cmd.qdir.output)])])
 		{ waitms: 1000},
 
-	cmd.conf(	[cmd.mcmd("TPsGenerator",TPsGenerator.conf("/tmp/small.csv")
+	cmd.conf(	[cmd.mcmd("TPsGenerator",TPsGenerator.conf("/tmp/test1.csv")
 			   )])
 		{ waitms: 1000},
 	
