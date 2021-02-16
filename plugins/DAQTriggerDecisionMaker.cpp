@@ -4,6 +4,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
+#include "triggermodules/daqtriggerdecisionmaker/Nljs.hpp"
 #include "dune-trigger-algs/Supernova/TriggerDecisionMaker_Supernova.hh"
 
 #include "CommonIssues.hpp"
@@ -40,6 +41,10 @@ namespace dunedaq {
 
       dunedaq::appfwk::ThreadHelper thread_;
       void do_work(std::atomic<bool>&);
+
+      int64_t window;
+      uint16_t thresh;
+      uint16_t hit_thresh;
 
       using source_t = dunedaq::appfwk::DAQSource<TriggerCandidate>;
       std::unique_ptr<source_t> inputQueue_;
@@ -94,14 +99,18 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_stop() method";
     }
 
-    void DAQTriggerDecisionMaker::do_configure(const nlohmann::json& /*args*/) {
+    void DAQTriggerDecisionMaker::do_configure(const nlohmann::json& config/*args*/) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
-      
-      int thresh = m_threshold;
+      auto params = config.get<dunedaq::triggermodules::daqtriggerdecisionmaker::Conf>();
 
+      window = params.time_window;
+      thresh = params.threshold;
+      hit_thresh = params.hit_threshold;
+      
       try {
-        //thresh = std::stoi(args.at(0));
-        m_threshold = thresh;
+        m_time_window = {window};
+        m_threshold = {thresh};
+        m_hit_threshold = {hit_thresh};
       } catch(...)  {
         ERS_LOG(get_name() << " unsuccessfully configured");
       }

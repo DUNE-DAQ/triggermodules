@@ -2,6 +2,7 @@ local moo = import "moo.jsonnet";
 local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
 local TPsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
 local TCsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerCandidateMaker-make.jsonnet";
+local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerDecisionMaker-make.jsonnet";
 
 ///////////	Queues
 local queues = {
@@ -79,7 +80,8 @@ local modules = {
 	cmd.conf(
 		[cmd.mcmd("TPsGenerator3",TPsGeneratorMake.conf("/tmp/test2.csv")),
 		cmd.mcmd("TAsGenerator"),
-		cmd.mcmd("TCsGenerator",TCsGeneratorMake.conf(1,1))])
+		cmd.mcmd("TCsGenerator",TCsGeneratorMake.conf(500000000,1,1)),
+		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1))])
 		{ waitms: 1000},
 	cmd.start(40){ waitms: 1000},
 	cmd.stop(){ waitms: 1000},

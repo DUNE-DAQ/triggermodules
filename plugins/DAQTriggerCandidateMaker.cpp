@@ -46,6 +46,7 @@ namespace dunedaq {
 
       void do_work(std::atomic<bool>&);
 
+      int64_t window;
       uint16_t thresh;
       uint16_t hit_thresh;
 
@@ -94,16 +95,17 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_configure() method";
       auto params = config.get<dunedaq::triggermodules::daqtriggercandidatemaker::Conf>();
       
-      // int thresh = m_threshold;
+      window = params.time_window;
       thresh = params.threshold;
       hit_thresh = params.hit_threshold;
-      //try {
+      try {
+        m_time_window = {window};
         m_threshold = {thresh};
         m_hit_threshold = {hit_thresh};
-      //} catch(...)  {
-      //  ERS_LOG(get_name() << " unsuccessfully configured");
-     // }
-     // ERS_LOG(get_name() << " successfully configured");
+      } catch(...)  {
+        ERS_LOG(get_name() << " unsuccessfully configured");
+      }
+      ERS_LOG(get_name() << " successfully configured");
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_configure() method";
     }
 
