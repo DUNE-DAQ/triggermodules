@@ -1,5 +1,9 @@
 # triggermodules
 
+## Getting started
+
+For getting started, you can follow this tutorial: https://github.com/DUNE-DAQ/triggermodules/wiki/Tutorial
+
 ## Broad overview / Philosophy
 
 This package is the prototype interface between triggeralgs (https://github.com/DUNE-DAQ/triggeralgs) and appfwk (https://github.com/DUNE-DAQ/appfwk). This is where the queues, DAQModule and their are implemented.
