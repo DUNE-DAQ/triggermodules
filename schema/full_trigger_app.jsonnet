@@ -21,7 +21,7 @@ local queues = {
 
 	TDsQueue: cmd.qspec("TDsQueue",
 		"FollyMPMCQueue",
-		1),
+		10),
 };
 
 ///////////	Modules

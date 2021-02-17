@@ -29,7 +29,7 @@ local queues = {
 
 	TDsQueue: cmd.qspec("TDsQueue",
 		"FollyMPMCQueue",
-		1),
+		10),
 };
 
 ///////////	Modules
@@ -41,9 +41,9 @@ local modules = {
 			cmd.qdir.output)]),
 
 	TPsGenerator1b: cmd.mspec("TPsGenerator1b",
-		"TriggerPrimitiveRadiological",
+		"TriggerPrimitiveFromFile",
 		[cmd.qinfo("output",
-			"TPsQueue1",
+			"TPsQueue2",
 			cmd.qdir.output)]),
 
 	TPsGenerator2a: cmd.mspec("TPsGenerator2a",
@@ -53,9 +53,9 @@ local modules = {
 			cmd.qdir.output)]),
 
 	TPsGenerator2b: cmd.mspec("TPsGenerator2b",
-		"TriggerPrimitiveFromFile",
+		"TriggerPrimitiveSupernova",
 		[cmd.qinfo("output",
-			"TPsQueue2",
+			"TPsQueue1",
 			cmd.qdir.output)]),
 
 	TAsGenerator1: cmd.mspec("TAsGenerator1",
@@ -119,7 +119,10 @@ local modules = {
 		{ waitms: 1000},
 
 	cmd.conf([
-		cmd.mcmd("TPsGenerator2b",TPsGeneratorFromFileMake.conf("/tmp/test2.csv")),
+		cmd.mcmd("TPsGenerator1a"),
+		cmd.mcmd("TPsGenerator1b",TPsGeneratorFromFileMake.conf("/tmp/test2.csv")),
+		cmd.mcmd("TPsGenerator2a"),
+		cmd.mcmd("TPsGenerator2b"),
 		cmd.mcmd("TAsGenerator1",TAsGeneratorMake.conf(250,2)),
 		cmd.mcmd("TAsGenerator2",TAsGeneratorMake.conf(250,2)),
 		cmd.mcmd("TCsGenerator1",TCsGeneratorMake.conf(500000000,1,1)),
