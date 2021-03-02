@@ -27,4 +27,4 @@ find_package(triggeralgs REQUIRED)
 ##############################################################################
 
 
-aq_install()
+daq_install()
