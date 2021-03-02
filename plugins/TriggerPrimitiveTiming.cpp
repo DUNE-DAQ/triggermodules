@@ -60,6 +60,7 @@ namespace dunedaq {
       // Generation
       std::default_random_engine generator;
       std::uniform_int_distribution<int>     rdm_signaltype             = std::uniform_int_distribution<int>    (0, 1);
+      std::uniform_int_distribution<int>     rdm_nhit                = std::uniform_int_distribution<int>    (0, 3);
     };
 
     
@@ -121,7 +122,8 @@ namespace dunedaq {
 
     std::vector<TriggerPrimitive> TriggerPrimitiveTiming::GetTimestamp() {
       std::vector<TriggerPrimitive> tps;
-      int signaltype = rdm_channel(generator);
+      auto nhit = rdm_nhit(generator);
+      int signaltype = rdm_signaltype(generator);
       for (int i=0; i<nhit; ++i) {
         TriggerPrimitive tp{};
 
@@ -130,8 +132,8 @@ namespace dunedaq {
         std::cout << "\033[32mtp.timestamp: " << tp.time_start << "\033[0m  ";
         tp.time_over_threshold = 0;
         tp.time_peak           = 0;
-        tp.channel             = 0l
-        tp.adc_integral        = 0l
+        tp.channel             = 0;
+        tp.adc_integral        = 0;
         tp.adc_peak            = 0;
         tp.detid               = signaltype;
         std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << "," << tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
