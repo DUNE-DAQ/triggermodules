@@ -13,11 +13,13 @@
 #include <ers/ers.h>
 #include <TRACE/trace.h>
 
+#include <chrono>
 #include <memory>
 #include <string>
 #include <vector>
 
 
+using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;
 using namespace triggeralgs;
 
 namespace dunedaq {
@@ -143,9 +145,21 @@ namespace dunedaq {
         std::string oss_prog = "Cand received #"+std::to_string(receivedCount);
         ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog));
         for (auto const& td: tds) {
-          std::cout << "\033[35mtd.time_start : " << td.time_start << "\033[0m  ";
-          std::cout << "\033[35mtd.time_end : "   << td.time_end << "\033[0m\n";
-        }
+          std::cout << "\033[36mTimestamp : "     << td.algorithm  << "\033[0m  ";
+          std::cout << "\033[36mtd.time_start : " << td.time_start << "\033[0m  ";
+          std::cout << "\033[36mtd.time_end : "   << td.time_end   << "\033[0m\n";
+		for (auto const& tc: td.tc_list) {
+		  std::cout << "\033[36mtc.: "   << tc.algorithm<< "\033[0m\n";
+			for (auto const& ta: tc.ta_list) {
+			  std::cout << "\033[36mta.: "   << ta.algorithm<< "\033[0m\n";
+				for (auto const& tp: ta.tp_list) {
+				  std::cout << "\033[36mtp.: "   << tp.algorithm<< "\033[0m\n";
+				  std::cout << "\033[36mtp.time_start: "   << tp.time_start<< "\033[0m\n";
+				  std::cout << "\033[36mtp.channel: "   << tp.channel << "\033[0m\n";
+				}
+			}
+		}
+	}
         while(tds.size()) {
           bool successfullyWasSent = false;
           while (!successfullyWasSent && running_flag.load()) {

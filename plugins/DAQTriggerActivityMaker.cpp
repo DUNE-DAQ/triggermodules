@@ -140,6 +140,8 @@ namespace dunedaq {
         std::string oss_prog = "Clustered prim #"+std::to_string(receivedCount);
         ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog));
         for (auto const& ta: tas) {
+          std::cout << "\033[34mTimestamp : "     << ta.algorithm<< "\033[0m  ";
+
           std::cout << "\033[34mta.time_start : "     << ta.time_start     << "\033[0m  ";
           std::cout << "\033[34mta.channel_start : "  << ta.channel_start  << "\033[0m  -> ";
           std::cout << "\033[34mta.channel_end : "    << ta.channel_end    << "\033[0m ";

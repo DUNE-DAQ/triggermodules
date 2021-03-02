@@ -155,6 +155,7 @@ namespace dunedaq {
         std::string oss_prog = "Activity received #"+std::to_string(receivedCount);
         ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog));
         for (auto const& tc: tcs) {
+          std::cout << "\033[35mTimestamp : "     << tc.algorithm<< "\033[0m  ";
           /*outputfile << tc.time_start << "\n";
           outputfile << tc.time_end<< "\n";
           outputfile << tc.time_decided<< "\n";
