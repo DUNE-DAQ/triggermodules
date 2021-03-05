@@ -43,7 +43,7 @@ namespace dunedaq {
       void do_work(std::atomic<bool>&);
 
       int64_t time_tolerance;
-      int32_t channel_tolerance;
+      int16_t channel_tolerance;
 
       //std::unique_ptr<dunedaq::appfwk::DAQSource<TriggerPrimitive>> inputQueue_;
       using source_t = dunedaq::appfwk::DAQSource<TriggerPrimitive>;

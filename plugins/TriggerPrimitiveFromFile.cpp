@@ -169,13 +169,13 @@ namespace dunedaq {
         tp.time_start          = (int64_t)tps_vector[i][0];
         std::cout << "\033[32mtp.time_start : " << tp.time_start << "\033[0m  ";
         tp.time_over_threshold = (int64_t)tps_vector[i][1];
-        tp.time_peak           = (int32_t)tps_vector[i][2];
-        tp.channel             = (uint32_t)tps_vector[i][3];
+        tp.time_peak           = (int64_t)tps_vector[i][2];
+        tp.channel             = (uint16_t)tps_vector[i][3];
         std::cout << "\033[32mtp.channel : " << tp.channel << "\033[0m\n";
-        tp.adc_integral        = (uint16_t)tps_vector[i][4];
+        tp.adc_integral        = (uint32_t)tps_vector[i][4];
         tp.adc_peak            = (uint16_t)tps_vector[i][5];
-        tp.detid               = (uint32_t)tps_vector[i][6];
-        tp.type		       = (uint32_t)tps_vector[i][7];
+        tp.detid               = (uint16_t)tps_vector[i][6];
+        tp.type		       = (uint16_t)tps_vector[i][7];
         tps.push_back(tp);
       }
       return tps;
