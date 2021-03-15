@@ -60,7 +60,7 @@ namespace dunedaq {
     
       // Generation
       std::default_random_engine generator;
-      std::uniform_int_distribution<int>     rdm_signaltype             = std::uniform_int_distribution<int>    (0, 1);
+      std::uniform_int_distribution<int>     rdm_signaltype             = std::uniform_int_distribution<int>    (0, 2);
       std::uniform_int_distribution<int>     rdm_nhit                = std::uniform_int_distribution<int>    (0, 3);
     };
 
