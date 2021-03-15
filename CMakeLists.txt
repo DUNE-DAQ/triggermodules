@@ -22,6 +22,7 @@ find_package(triggeralgs REQUIRED)
 	daq_add_plugin(TriggerPrimitiveTiming       duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 	daq_add_plugin(DAQTriggerActivityMaker      duneDAQModule SCHEMA LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 	daq_add_plugin(DAQTriggerCandidateMaker     duneDAQModule SCHEMA LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
+	daq_add_plugin(DAQTriggerTimingCandidateMaker	    duneDAQModule LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 	daq_add_plugin(DAQTriggerDecisionMaker      duneDAQModule SCHEMA LINK_LIBRARIES appfwk::appfwk SupernovaTrigger)
 
 ##############################################################################

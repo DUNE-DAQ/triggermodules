@@ -2,6 +2,7 @@
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/DAQSink.hpp"
 #include "dune-trigger-algs/TriggerPrimitive.hh"
+#include "dune-trigger-algs/TriggerCandidate.hh"
 
 #include "CommonIssues.hpp"
 
