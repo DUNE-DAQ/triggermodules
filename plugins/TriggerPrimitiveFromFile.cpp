@@ -159,15 +159,18 @@ namespace dunedaq {
     }
 
     std::vector<TriggerPrimitive> TriggerPrimitiveFromFile::GetEvts(std::vector<std::vector<int64_t>> tps_vector) {
-        std::cout << "\033[32m ENTERING TP GENERATOR WITH SOURCE FILE " << filename << "\033[0m  ";
-        std::cout << "\033[32m TPs vector size: " << tps_vector.size() << "\033[0m  ";
+        std::cout << "\033[28m ENTERING TP GENERATOR WITH SOURCE FILE " << filename << "\033[0m  ";
+        std::cout << "\033[28m TPs vector size: " << tps_vector.size() << "\033[0m  ";
       std::vector<TriggerPrimitive> tps;
       int EvtNo = tps_vector.size();
       for (int i=0; i<EvtNo; ++i) {
         TriggerPrimitive tp{};
 
+        auto now = std::chrono::steady_clock::now();
+        tp.algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
+          std::cout << "\033[31mTimestamp : "     << tp.algorithm<< "\033[0m  ";
         tp.time_start          = (int64_t)tps_vector[i][0];
-        std::cout << "\033[32mtp.time_start : " << tp.time_start << "\033[0m  ";
+        std::cout << "\033[31mtp.time_start : " << tp.time_start << "\033[0m  ";
         tp.time_over_threshold = (int64_t)tps_vector[i][1];
         tp.time_peak           = (int64_t)tps_vector[i][2];
         tp.channel             = (uint16_t)tps_vector[i][3];
