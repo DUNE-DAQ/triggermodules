@@ -128,7 +128,10 @@ namespace dunedaq {
       for (int i=0; i<nhit; ++i) {
         TriggerPrimitive tp{};
 
+        auto now = std::chrono::steady_clock::now();
+        tp.algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
         auto tp_start_time = std::chrono::steady_clock::now();
+        std::cout << "\033[32mtp.algorithm: " << tp.algorithm << "\033[0m  ";
         tp.time_start          = pd_clock(tp_start_time.time_since_epoch()).count();
         std::cout << "\033[32mtp.timestamp: " << tp.time_start << "\033[0m  ";
         tp.time_over_threshold = 0;
