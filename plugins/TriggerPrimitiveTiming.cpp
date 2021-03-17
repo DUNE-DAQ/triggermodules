@@ -1,7 +1,7 @@
 #include "appfwk/ThreadHelper.hpp"
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/DAQSink.hpp"
-#include "dune-trigger-algs/TriggerPrimitive.hh"
+#include "dune-trigger-algs/TimingMessage.hh"
 #include "dune-trigger-algs/TriggerCandidate.hh"
 
 #include "CommonIssues.hpp"
@@ -48,11 +48,11 @@ namespace dunedaq {
       void do_work(std::atomic<bool>&);
 
       // Generation
-      std::vector<TriggerPrimitive> GetTimestamp();
+      std::vector<TimingMessage> GetTimestamp();
 
       // Configuration
       //std::unique_ptr<dunedaq::appfwk::DAQSink<TriggerPrimitive>> outputQueue_;
-      using sink_t = dunedaq::appfwk::DAQSink<TriggerPrimitive>;
+      using sink_t = dunedaq::appfwk::DAQSink<TimingMessage>;
       std::unique_ptr<sink_t> outputQueue_;
 
       std::chrono::milliseconds queueTimeout_;
@@ -121,29 +121,23 @@ namespace dunedaq {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_unconfigure() method";
     }
 
-    std::vector<TriggerPrimitive> TriggerPrimitiveTiming::GetTimestamp() {
-      std::vector<TriggerPrimitive> tps;
+    std::vector<TimingMessage> TriggerPrimitiveTiming::GetTimestamp() {
+      std::vector<TimingMessage> tms;
       auto nhit = rdm_nhit(generator);
       int signaltype = rdm_signaltype(generator);
       for (int i=0; i<nhit; ++i) {
-        TriggerPrimitive tp{};
+        TimingMessage tm{};
 
-        auto tp_start_time = std::chrono::steady_clock::now();
-        std::cout << "\033[32mtp.algorithm: " << tp.algorithm << "\033[0m  ";
-        tp.time_start          = pd_clock(tp_start_time.time_since_epoch()).count();
-        std::cout << "\033[32mtp.timestamp: " << tp.time_start << "\033[0m  ";
-        tp.time_over_threshold = 0;
-        tp.time_peak           = 0;
-        tp.channel             = 0;
-        tp.adc_integral        = 0;
-        tp.adc_peak            = 0;
-        tp.detid               = signaltype;
-        //std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << "," << tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
+        auto tm_start_time = std::chrono::steady_clock::now();
+        tm.time_stamp = pd_clock(tm_start_time.time_since_epoch()).count();
+        std::cout << "\033[32mtm.timestamp: " << tm.time_stamp << "\033[0m  ";
+        tm.signal_type = signaltype;
+        //std::cout << "\033[32m" << tm.time_stamp << ","<< tm.signal_type << ","<< tm.counter << "\033[0m\n";
         auto now = std::chrono::steady_clock::now();
-        tp.flag = (uint32_t)pd_clock(now.time_since_epoch()).count();
-        tps.push_back(tp);
+        tm.counter = (uint32_t)pd_clock(now.time_since_epoch()).count();
+        tms.push_back(tm);
       }
-      return tps;
+      return tms;
     }
     
     void TriggerPrimitiveTiming::do_work(std::atomic<bool>& running_flag) {
@@ -155,20 +149,19 @@ namespace dunedaq {
         TLOG(TLVL_GENERATION) << get_name() << ": Start of sleep between sends";
         std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000));
 
-        std::vector<TriggerPrimitive> tps = GetTimestamp();
+        std::vector<TimingMessage> tms = GetTimestamp();
 
-        if (tps.size() == 0) {
+        if (tms.size() == 0) {
           std::ostringstream oss_prog;
-          oss_prog << "Last TPs packet has size 0, continuing!";
+          oss_prog << "Last TMs packet has size 0, continuing!";
           ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog.str()));
           continue; 
         } else {
           std::ostringstream oss_prog;
-          oss_prog << "Generated Argon 39 TPs #" << generatedCount << " last TPs packet has size " << tps.size();
           ers::debug(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_prog.str()));
         }
 
-        generatedCount+=tps.size();
+        generatedCount+=tms.size();
         
         std::string thisQueueName = outputQueue_->get_name();
         TLOG(TLVL_GENERATION) << get_name() << ": Pushing list onto the outputQueue: " << thisQueueName;
@@ -177,9 +170,9 @@ namespace dunedaq {
         while (!successfullyWasSent && running_flag.load()) {
           TLOG(TLVL_GENERATION) << get_name() << ": Pushing the generated list onto queue " << thisQueueName;
 
-          for (auto const& tp: tps) {
+          for (auto const& tm: tms) {
             try {
-              outputQueue_->push(tp, queueTimeout_);
+              outputQueue_->push(tm, queueTimeout_);
               successfullyWasSent = true;
               ++sentCount;
             } catch (const dunedaq::appfwk::QueueTimeoutExpired& excpt) {
@@ -200,7 +193,7 @@ namespace dunedaq {
 
       std::ostringstream oss_summ;
       oss_summ << ": Exiting the do_work() method, generated " << generatedCount
-               << " TP set and successfully sent " << sentCount << " copies. ";
+               << " TM set and successfully sent " << sentCount << " copies. ";
       ers::info(dunedaq::dunetrigger::ProgressUpdate(ERS_HERE, get_name(), oss_summ.str()));
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting do_work() method";
     }
