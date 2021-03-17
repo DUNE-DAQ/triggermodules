@@ -153,7 +153,7 @@ namespace dunedaq {
 			for (auto const& ta: tc.ta_list) {
 			  std::cout << "\033[36mta.: "   << ta.algorithm<< "\033[0m\n";
 				for (auto const& tp: ta.tp_list) {
-				  std::cout << "\033[36mtp.: "   << tp.algorithm<< "\033[0m\n";
+				  std::cout << "\033[36mtp.: "   << tp.flag << "\033[0m\n";
 				  std::cout << "\033[36mtp.time_start: "   << tp.time_start<< "\033[0m\n";
 				  std::cout << "\033[36mtp.channel: "   << tp.channel << "\033[0m\n";
 				}

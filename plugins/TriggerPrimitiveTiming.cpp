@@ -128,8 +128,6 @@ namespace dunedaq {
       for (int i=0; i<nhit; ++i) {
         TriggerPrimitive tp{};
 
-        auto now = std::chrono::steady_clock::now();
-        tp.algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
         auto tp_start_time = std::chrono::steady_clock::now();
         std::cout << "\033[32mtp.algorithm: " << tp.algorithm << "\033[0m  ";
         tp.time_start          = pd_clock(tp_start_time.time_since_epoch()).count();
@@ -140,7 +138,9 @@ namespace dunedaq {
         tp.adc_integral        = 0;
         tp.adc_peak            = 0;
         tp.detid               = signaltype;
-        std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << "," << tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
+        //std::cout << "\033[32m" << tp.time_start << ","<< tp.time_over_threshold << ","<< tp.time_peak << ","<< tp.channel << ","<< tp.adc_integral << "," << tp.adc_peak << ","<< tp.detid << ","<< tp.type << "\033[0m\n";
+        auto now = std::chrono::steady_clock::now();
+        tp.flag = (uint32_t)pd_clock(now.time_since_epoch()).count();
         tps.push_back(tp);
       }
       return tps;

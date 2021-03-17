@@ -153,8 +153,6 @@ namespace dunedaq {
 
 
         auto tp_start_time = std::chrono::steady_clock::now();
-        tp.algorithm 	       = (uint32_t)pd_clock(tp_start_time.time_since_epoch()).count();
-          std::cout << "\033[31mTimestamp : "     << tp.algorithm<< "\033[0m  ";
         tp.time_start          = pd_clock(tp_start_time.time_since_epoch()).count();
         std::cout << "\033[31mtp.time_start : " << tp.time_start << "\033[0m  ";
         //tp.time_over_threshold = pd_clock(tot_time).count();
@@ -165,6 +163,9 @@ namespace dunedaq {
         tp.adc_integral        = (uint32_t)rdm_adc(generator);
         tp.adc_peak            = (uint16_t)rdm_adc(generator);
         tp.detid               = tp.channel;
+        auto now = std::chrono::steady_clock::now();
+        tp.flag = (uint32_t)pd_clock(now.time_since_epoch()).count();
+          std::cout << "\033[31mTimestamp : "     << tp.algorithm<< "\033[0m  ";
         tps.push_back(tp);
       }
       m_n_supernova_evt--;
