@@ -129,7 +129,7 @@ namespace dunedaq {
         TimingMessage tm{};
 
         auto tm_start_time = std::chrono::steady_clock::now();
-        tm.time_stamp = pd_clock(tm_start_time.time_since_epoch()).count();
+        tm.time_stamp = (uint64_t)pd_clock(tm_start_time.time_since_epoch()).count();
         std::cout << "\033[32mtm.timestamp: " << tm.time_stamp << "\033[0m  ";
         tm.signal_type = signaltype;
         //std::cout << "\033[32m" << tm.time_stamp << ","<< tm.signal_type << ","<< tm.counter << "\033[0m\n";
