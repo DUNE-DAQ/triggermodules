@@ -7,14 +7,18 @@ local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules
 
 ///////////	Queues
 local queues = {
-	TMsQueue: cmd.qspec("TMsQueue",
-		"FollyMPMCQueue",
-		1000),
-
 	TPsQueue: cmd.qspec("TPsQueue",
 		"FollyMPMCQueue",
 		1000),
 			
+	TPsQueue2: cmd.qspec("TPsQueue2",
+		"FollyMPMCQueue",
+		1000),
+
+	TPsQueue3: cmd.qspec("TPsQueue3",
+		"FollyMPMCQueue",
+		1000),
+
 	TAsQueue: cmd.qspec("TAsQueue",
 		"FollyMPMCQueue",
 		100),
@@ -30,16 +34,22 @@ local queues = {
 
 ///////////	Modules
 local modules = {
-	TMsGenerator: cmd.mspec("TMsGenerator",
-		"TriggerPrimitiveTiming",
-		[cmd.qinfo("output",
-			"TMsQueue",
-			cmd.qdir.output)]),
-
 	TPsGenerator: cmd.mspec("TPsGenerator",
-		"TriggerPrimitiveRadiological",
+		"TriggerPrimitiveFromFile",
 		[cmd.qinfo("output",
 			"TPsQueue",
+			cmd.qdir.output)]),
+
+	TPsGenerator2: cmd.mspec("TPsGenerator2",
+		"TriggerPrimitiveFromFile",
+		[cmd.qinfo("output",
+			"TPsQueue2",
+			cmd.qdir.output)]),
+
+	TPsGenerator3: cmd.mspec("TPsGenerator3",
+		"TriggerPrimitiveFromFile",
+		[cmd.qinfo("output",
+			"TPsQueue3",
 			cmd.qdir.output)]),
 
 	TAsGenerator: cmd.mspec("TAsGenerator",
@@ -51,13 +61,22 @@ local modules = {
 			"TAsQueue",
 			cmd.qdir.output)]),
 	
-	TimingTCsGenerator: cmd.mspec("TimingTCsGenerator",
-		"DAQTriggerTimingCandidateMaker",
+	TAsGenerator2: cmd.mspec("TAsGenerator2",
+		"DAQTriggerActivityMaker",
 		[cmd.qinfo("input",
-			"TMsQueue",
+			"TPsQueue2",
 			cmd.qdir.input),
 		cmd.qinfo("output",
-			"TCsQueue",
+			"TAsQueue",
+			cmd.qdir.output)]),
+
+	TAsGenerator3: cmd.mspec("TAsGenerator3",
+		"DAQTriggerActivityMaker",
+		[cmd.qinfo("input",
+			"TPsQueue3",
+			cmd.qdir.input),
+		cmd.qinfo("output",
+			"TAsQueue",
 			cmd.qdir.output)]),
 
 	TCsGenerator: cmd.mspec("TCsGenerator",
@@ -82,14 +101,16 @@ local modules = {
 
 ///////////	Conf
 [
-	cmd.init([queues.TMsQueue,queues.TPsQueue,queues.TAsQueue,queues.TCsQueue,queues.TDsQueue],
-		[modules.TMsGenerator,modules.TPsGenerator, modules.TAsGenerator, modules.TimingTCsGenerator, modules.TCsGenerator, modules.TDsGenerator])
+	cmd.init([queues.TPsQueue,queues.TPsQueue2,queues.TPsQueue3,queues.TAsQueue,queues.TCsQueue,queues.TDsQueue],
+		[modules.TPsGenerator, modules.TPsGenerator2, modules.TPsGenerator3, modules.TAsGenerator, modules.TAsGenerator2, modules.TCsGenerator, modules.TDsGenerator])
 		{ waitms: 1000},
 	cmd.conf([
-		cmd.mcmd("TMsGenerator"),
-		cmd.mcmd("TPsGenerator"),
+		cmd.mcmd("TPsGenerator",TPsGeneratorFromFileMake.conf("/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/latency/pkg10.csv")),
+		cmd.mcmd("TPsGenerator2",TPsGeneratorFromFileMake.conf("/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/latency/pkg10.csv")),
+		cmd.mcmd("TPsGenerator3",TPsGeneratorFromFileMake.conf("/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/latency/pkg10.csv")),
 		cmd.mcmd("TAsGenerator",TAsGeneratorMake.conf(250,2)),
-		cmd.mcmd("TimingTCsGenerator"),
+		cmd.mcmd("TAsGenerator2",TAsGeneratorMake.conf(250,2)),
+		cmd.mcmd("TAsGenerator3",TAsGeneratorMake.conf(250,2)),
 		cmd.mcmd("TCsGenerator",TCsGeneratorMake.conf(500000000,1,1)),
 		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1)),
 		])
@@ -97,3 +118,4 @@ local modules = {
 	cmd.start(40){ waitms: 1000},
 	cmd.stop(){ waitms: 1000},
 ]
+

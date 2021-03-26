@@ -7,10 +7,6 @@ local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules
 
 ///////////	Queues
 local queues = {
-	TMsQueue: cmd.qspec("TMsQueue",
-		"FollyMPMCQueue",
-		1000),
-
 	TPsQueue: cmd.qspec("TPsQueue",
 		"FollyMPMCQueue",
 		1000),
@@ -30,14 +26,8 @@ local queues = {
 
 ///////////	Modules
 local modules = {
-	TMsGenerator: cmd.mspec("TMsGenerator",
-		"TriggerPrimitiveTiming",
-		[cmd.qinfo("output",
-			"TMsQueue",
-			cmd.qdir.output)]),
-
 	TPsGenerator: cmd.mspec("TPsGenerator",
-		"TriggerPrimitiveRadiological",
+		"TriggerPrimitiveFromFile",
 		[cmd.qinfo("output",
 			"TPsQueue",
 			cmd.qdir.output)]),
@@ -51,15 +41,6 @@ local modules = {
 			"TAsQueue",
 			cmd.qdir.output)]),
 	
-	TimingTCsGenerator: cmd.mspec("TimingTCsGenerator",
-		"DAQTriggerTimingCandidateMaker",
-		[cmd.qinfo("input",
-			"TMsQueue",
-			cmd.qdir.input),
-		cmd.qinfo("output",
-			"TCsQueue",
-			cmd.qdir.output)]),
-
 	TCsGenerator: cmd.mspec("TCsGenerator",
 		"DAQTriggerCandidateMaker",
 		[cmd.qinfo("input",
@@ -82,14 +63,13 @@ local modules = {
 
 ///////////	Conf
 [
-	cmd.init([queues.TMsQueue,queues.TPsQueue,queues.TAsQueue,queues.TCsQueue,queues.TDsQueue],
-		[modules.TMsGenerator,modules.TPsGenerator, modules.TAsGenerator, modules.TimingTCsGenerator, modules.TCsGenerator, modules.TDsGenerator])
+	cmd.init([queues.TPsQueue,queues.TAsQueue,queues.TCsQueue,queues.TDsQueue],
+		[modules.TPsGenerator, modules.TAsGenerator, modules.TCsGenerator, modules.TDsGenerator])
 		{ waitms: 1000},
-	cmd.conf([
-		cmd.mcmd("TMsGenerator"),
-		cmd.mcmd("TPsGenerator"),
+	cmd.conf(
+		[
+		cmd.mcmd("TPsGenerator",TPsGeneratorFromFileMake.conf("/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/latency/pkg10.csv")),
 		cmd.mcmd("TAsGenerator",TAsGeneratorMake.conf(250,2)),
-		cmd.mcmd("TimingTCsGenerator"),
 		cmd.mcmd("TCsGenerator",TCsGeneratorMake.conf(500000000,1,1)),
 		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1)),
 		])
@@ -97,3 +77,4 @@ local modules = {
 	cmd.start(40){ waitms: 1000},
 	cmd.stop(){ waitms: 1000},
 ]
+

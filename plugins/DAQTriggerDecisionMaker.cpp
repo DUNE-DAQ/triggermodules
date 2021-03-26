@@ -159,6 +159,9 @@ namespace dunedaq {
 				}
 			}
 		}
+        auto now = std::chrono::steady_clock::now();
+        uint32_t timestamp_now = (uint32_t)pd_clock(now.time_since_epoch()).count();
+          std::cout << "\033[36mTimestamp now : "     << timestamp_now << "\033[0m  ";
 	}
         while(tds.size()) {
           bool successfullyWasSent = false;

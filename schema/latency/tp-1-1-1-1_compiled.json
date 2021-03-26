@@ -1,0 +1,162 @@
+[
+    {
+        "data": {
+            "modules": [
+                {
+                    "data": {
+                        "qinfos": [
+                            {
+                                "dir": "output",
+                                "inst": "TPsQueue",
+                                "name": "output"
+                            }
+                        ]
+                    },
+                    "inst": "TPsGenerator",
+                    "plugin": "TriggerPrimitiveFromFile"
+                },
+                {
+                    "data": {
+                        "qinfos": [
+                            {
+                                "dir": "input",
+                                "inst": "TPsQueue",
+                                "name": "input"
+                            },
+                            {
+                                "dir": "output",
+                                "inst": "TAsQueue",
+                                "name": "output"
+                            }
+                        ]
+                    },
+                    "inst": "TAsGenerator",
+                    "plugin": "DAQTriggerActivityMaker"
+                },
+                {
+                    "data": {
+                        "qinfos": [
+                            {
+                                "dir": "input",
+                                "inst": "TAsQueue",
+                                "name": "input"
+                            },
+                            {
+                                "dir": "output",
+                                "inst": "TCsQueue",
+                                "name": "output"
+                            }
+                        ]
+                    },
+                    "inst": "TCsGenerator",
+                    "plugin": "DAQTriggerCandidateMaker"
+                },
+                {
+                    "data": {
+                        "qinfos": [
+                            {
+                                "dir": "input",
+                                "inst": "TCsQueue",
+                                "name": "input"
+                            },
+                            {
+                                "dir": "output",
+                                "inst": "TDsQueue",
+                                "name": "output"
+                            }
+                        ]
+                    },
+                    "inst": "TDsGenerator",
+                    "plugin": "DAQTriggerDecisionMaker"
+                }
+            ],
+            "queues": [
+                {
+                    "capacity": 1000,
+                    "inst": "TPsQueue",
+                    "kind": "FollyMPMCQueue"
+                },
+                {
+                    "capacity": 100,
+                    "inst": "TAsQueue",
+                    "kind": "FollyMPMCQueue"
+                },
+                {
+                    "capacity": 10,
+                    "inst": "TCsQueue",
+                    "kind": "FollyMPMCQueue"
+                },
+                {
+                    "capacity": 10,
+                    "inst": "TDsQueue",
+                    "kind": "FollyMPMCQueue"
+                }
+            ]
+        },
+        "id": "init",
+        "waitms": 10
+    },
+    {
+        "data": {
+            "modules": [
+                {
+                    "data": {
+                        "filename": "/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/latency/pkg10.csv"
+                    },
+                    "match": "TPsGenerator"
+                },
+                {
+                    "data": {
+                        "channel_tolerance": 2,
+                        "time_tolerance": 250
+                    },
+                    "match": "TAsGenerator"
+                },
+                {
+                    "data": {
+                        "hit_threshold": 1,
+                        "threshold": 1,
+                        "time_window": 500000000
+                    },
+                    "match": "TCsGenerator"
+                },
+                {
+                    "data": {
+                        "hit_threshold": 1,
+                        "threshold": 1,
+                        "time_window": 500000000
+                    },
+                    "match": "TDsGenerator"
+                }
+            ]
+        },
+        "id": "conf",
+        "waitms": 10
+    },
+    {
+        "data": {
+            "modules": [
+                {
+                    "data": {
+                        "run": 40
+                    },
+                    "match": ""
+                }
+            ]
+        },
+        "id": "start",
+        "waitms": 10
+    },
+    {
+        "data": {
+            "modules": [
+                {
+                    "data": {},
+                    "match": ""
+                }
+            ]
+        },
+        "id": "stop",
+        "waitms": 10
+    }
+]
