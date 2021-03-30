@@ -51,7 +51,7 @@ namespace dunedaq {
       uint16_t hit_thresh;
 
       //std::unique_ptr<dunedaq::appfwk::DAQSource<TriggerPrimitive>> inputQueue_;
-      using source_t = dunedaq::appfwk::DAQSource<TimingMessage>;
+      using source_t = dunedaq::appfwk::DAQSource<TimeStampedData>;
       std::unique_ptr<source_t> inputQueue_;
 
       //std::unique_ptr<dunedaq::appfwk::DAQSink<TriggerCandidate>> outputQueue_;
@@ -120,13 +120,13 @@ namespace dunedaq {
           std::cout << "\033[35mhit_threshold: "   << hit_thresh << "\033[0m\n";
       int receivedCount = 0;
       int sentCount = 0;
-      TimingMessage message;
+      TimeStampedData data;
       /*std::string outputfilename = "/scratch/tc.out";*/
 
       while (running_flag.load()) {
         TLOG(TLVL_CANDIDATE) << get_name() << ": Going to receive data from input queue";
         try {
-          inputQueue_->pop(message, queueTimeout_);
+          inputQueue_->pop(data, queueTimeout_);
         } catch (const dunedaq::appfwk::QueueTimeoutExpired& excpt) {
           // it is perfectly reasonable that there might be no data in the queue 
           // some fraction of the times that we check, so we just continue on and try again
@@ -135,7 +135,7 @@ namespace dunedaq {
         ++receivedCount;
 
         std::vector<TriggerCandidate> tcs;
-        this->operator()(message,tcs);
+        this->operator()(data,tcs);
 	/*std::ofstream outputfile;
         outputfile.open(outputfilename);*/
         

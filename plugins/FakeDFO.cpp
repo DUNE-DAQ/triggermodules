@@ -152,7 +152,6 @@ namespace dunedaq {
     void FakeDFO::do_work(std::atomic<bool>& running_flag) {
       TLOG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering do_work() method";
       int receivedCount = 0;
-      int sentCount = 0;
       TriggerDecision dec;
 
       while (running_flag.load()) {

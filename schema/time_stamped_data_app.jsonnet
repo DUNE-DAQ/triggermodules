@@ -4,7 +4,7 @@ local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules
 
 ///////////	Queues
 local queues = {
-	TMsQueue: cmd.qspec("TMsQueue",
+	TSDsQueue: cmd.qspec("TSDsQueue",
 		"FollyMPMCQueue",
 		1000),
 			
@@ -19,17 +19,17 @@ local queues = {
 
 ///////////	Modules
 local modules = {
-	TMsGenerator: cmd.mspec("TMsGenerator",
+	TSDsGenerator: cmd.mspec("TSDsGenerator",
 		"TriggerPrimitiveTiming",
 		[cmd.qinfo("output",
-			"TMsQueue",
+			"TSDsQueue",
 			cmd.qdir.output)]),
 
 	
 	TimingTCsGenerator: cmd.mspec("TimingTCsGenerator",
 		"DAQTriggerTimingCandidateMaker",
 		[cmd.qinfo("input",
-			"TMsQueue",
+			"TSDsQueue",
 			cmd.qdir.input),
 		cmd.qinfo("output",
 			"TCsQueue",
@@ -48,11 +48,11 @@ local modules = {
 
 ///////////	Conf
 [
-	cmd.init([queues.TMsQueue,queues.TCsQueue,queues.TDsQueue],
-		[modules.TMsGenerator, modules.TimingTCsGenerator,modules.TDsGenerator])
+	cmd.init([queues.TSDsQueue,queues.TCsQueue,queues.TDsQueue],
+		[modules.TSDsGenerator, modules.TimingTCsGenerator,modules.TDsGenerator])
 		{ waitms: 1000},
 	cmd.conf(
-		[cmd.mcmd("TMsGenerator"),
+		[cmd.mcmd("TSDsGenerator"),
 		cmd.mcmd("TimingTCsGenerator"),
 		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1))])
 		{ waitms: 1000},
