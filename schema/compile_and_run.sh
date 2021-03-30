@@ -6,6 +6,7 @@ APPNAME=2csv-to-1-trigger_app
 APPNAME=timing_message_app
 APPNAME=full_trigger_app
 APPNAME=simplest_trigger_app
+APPNAME=dfo_app
 cd ../../..
 moo compile sourcecode/triggermodules/schema/"$APPNAME".jsonnet > sourcecode/triggermodules/schema/"$APPNAME"_compiled.json
 cd sourcecode/triggermodules/schema/

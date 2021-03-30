@@ -1,0 +1,88 @@
+local moo = import "moo.jsonnet";
+local cmd = import "sourcecode/appfwk/schema/appfwk-cmd-make.jsonnet";
+local TPsGeneratorFromFileMake = import "sourcecode/triggermodules/schema/triggermodules-TriggerPrimitiveFromFile-make.jsonnet";
+local TAsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerActivityMaker-make.jsonnet";
+local TCsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerCandidateMaker-make.jsonnet";
+local TDsGeneratorMake = import "sourcecode/triggermodules/schema/triggermodules-DAQTriggerDecisionMaker-make.jsonnet";
+local DFOMake = import "sourcecode/triggermodules/schema/triggermodules-FakeDFO-make.jsonnet";
+
+///////////	Queues
+local queues = {
+	TPsQueue: cmd.qspec("TPsQueue",
+		"FollyMPMCQueue",
+		1000),
+			
+	TAsQueue: cmd.qspec("TAsQueue",
+		"FollyMPMCQueue",
+		100),
+		
+	TCsQueue: cmd.qspec("TCsQueue",
+		"FollyMPMCQueue",
+		10),
+
+	TDsQueue: cmd.qspec("TDsQueue",
+		"FollyMPMCQueue",
+		10),
+};
+
+///////////	Modules
+local modules = {
+	TPsGenerator: cmd.mspec("TPsGenerator",
+		"TriggerPrimitiveFromFile",
+		[cmd.qinfo("output",
+			"TPsQueue",
+			cmd.qdir.output)]),
+
+	TAsGenerator: cmd.mspec("TAsGenerator",
+		"DAQTriggerActivityMaker",
+		[cmd.qinfo("input",
+			"TPsQueue",
+			cmd.qdir.input),
+		cmd.qinfo("output",
+			"TAsQueue",
+			cmd.qdir.output)]),
+	
+	TCsGenerator: cmd.mspec("TCsGenerator",
+		"DAQTriggerCandidateMaker",
+		[cmd.qinfo("input",
+			"TAsQueue",
+			cmd.qdir.input),
+		cmd.qinfo("output",
+			"TCsQueue",
+			cmd.qdir.output)]),
+
+	TDsGenerator: cmd.mspec("TDsGenerator",
+		"DAQTriggerDecisionMaker",
+		[cmd.qinfo("input",
+			"TCsQueue",
+			cmd.qdir.input),
+		cmd.qinfo("output",
+			"TDsQueue",
+			cmd.qdir.output)]),
+
+	DFO: cmd.mspec("DFO",
+		"FakeDFO",
+		[cmd.qinfo("input",
+			"TDsQueue",
+			cmd.qdir.input)]),
+};
+
+
+///////////	Conf
+[
+	cmd.init([queues.TPsQueue,queues.TAsQueue,queues.TCsQueue,queues.TDsQueue],
+		[modules.TPsGenerator, modules.TAsGenerator, modules.TCsGenerator, modules.TDsGenerator, modules.DFO])
+		{ waitms: 1000},
+	cmd.conf(
+		[
+		cmd.mcmd("TPsGenerator",TPsGeneratorFromFileMake.conf("/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/latency/pkg10.csv")),
+		cmd.mcmd("TAsGenerator",TAsGeneratorMake.conf(250,2)),
+		cmd.mcmd("TCsGenerator",TCsGeneratorMake.conf(500000000,1,1)),
+		cmd.mcmd("TDsGenerator",TDsGeneratorMake.conf(500000000,1,1)),
+		cmd.mcmd("DFO",DFOMake.conf("/home/lukas.arnold/feb2021/sourcecode/triggermodules/schema/out.txt")),
+		])
+		{ waitms: 1000},
+	cmd.start(40){ waitms: 1000},
+	cmd.stop(){ waitms: 1000},
+]
+

@@ -85,21 +85,22 @@ namespace dunedaq {
 
    void FakeDFO::WriteFile(const std::string filename, TriggerDecision td, uint32_t timestamp_now) {
 	std::vector<std::vector<int64_t>> tps_vector;
-        std::ofstream sink(filename);
+        std::ofstream sink;
+        sink.open(filename, std::ios_base::app);
         if(!sink.is_open()) throw std::runtime_error("Could not open file");
 
-        sink << "\033[36mTimestamp now : "     << timestamp_now << "\033[0m  ";
-        sink << "\033[36mtd.algorithm: "     << td.algorithm  << "\033[0m  ";
-        sink << "\033[36mtd.time_start : " << td.time_start << "\033[0m  ";
-        sink << "\033[36mtd.time_end : "   << td.time_end   << "\033[0m\n";
+        sink << "Timestamp now : "     << timestamp_now << " ";
+        sink << "td.algorithm: "     << td.algorithm  << " ";
+        sink << "td.time_start : " << td.time_start << " ";
+        sink << "td.time_end : "   << td.time_end   << "\n";
 	for (auto const& tc: td.tc_list) {
-	  sink << "\033[36mtc.: "   << tc.algorithm<< "\033[0m\n";
+	  sink << "tc.: "   << tc.algorithm<< "\n";
 	    for (auto const& ta: tc.ta_list) {
-	      sink << "\033[36mta.: "   << ta.algorithm<< "\033[0m\n";
+	      sink << "ta.: "   << ta.algorithm<< "\n";
 		for (auto const& tp: ta.tp_list) {
-		  sink << "\033[36mtp.: "   << tp.flag << "\033[0m\n";
-		  sink << "\033[36mtp.time_start: "   << tp.time_start<< "\033[0m\n";
-		  sink << "\033[36mtp.channel: "   << tp.channel << "\033[0m\n";
+		  sink << "tp.: "   << tp.flag << "\n";
+		  sink << "tp.time_start: "   << tp.time_start<< "\n";
+		  sink << "tp.channel: "   << tp.channel << "\n";
 		}
 	    }
 	}

@@ -6,7 +6,7 @@ local types = {
     pathname : s.string("Path", "path", doc="File path, file name"),
 
     conf: s.record("Conf", [
-        s.field("filename", self.pathname, "output.bin",
+        s.field("filename", self.pathname, "/tmp/output.txt",
                 doc="File name of output file"),
     ], doc="FakeDFO configuration"),
 
